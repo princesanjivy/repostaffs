@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/staff_status_admin.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,8 +20,9 @@ class _MyAppState extends State<MyApp> {
         // ),
         primaryColor: PRIMARY,
         canvasColor: SECONDARY,
+        accentColor: PRIMARY,
       ),
-      home: StaffStatusAdmin(),
+      // home: StaffStatusAdmin(),
     );
   }
 }
