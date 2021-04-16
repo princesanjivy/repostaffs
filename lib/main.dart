@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:repostaffs/LoginPage.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/staff_status_admin.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,18 +21,13 @@ class _MyAppState extends State<MyApp> {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
-        textTheme: TextTheme(
-          bodyText1: TextStyle(),
-          bodyText2: TextStyle(),
-        ).apply(
-          bodyColor: Colors.white,
-          displayColor: Colors.white,
-          decorationColor: Colors.white,
-        ),
         buttonColor: Colors.white,
         scaffoldBackgroundColor: SECONDARY,
       ),
       home: Login(),
+      // textTheme: GoogleFonts.poppinsTextTheme().apply(
+      //   bodyColor: Colors.white,
+      // ),
     );
   }
 }
