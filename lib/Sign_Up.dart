@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:repostaffs/LoginPage.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/Sign_Up.dart';
 import 'package:google_fonts/google_fonts.dart';
 
