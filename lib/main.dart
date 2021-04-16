@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:repostaffs/LoginPage.dart';
-import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/Sign_Up.dart';
+import 'package:repostaffs/screens/staff_status_admin.dart';
+import 'package:repostaffs/screens/login.dart';
 
 void main() {
   runApp(MyApp());

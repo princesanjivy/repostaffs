@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/status_report.dart';
 
 class StaffStatusAdmin extends StatefulWidget {
   @override
@@ -45,6 +46,12 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
             ),
             onTap: () {
               /// todo
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StatusReport(),
+                ),
+              );
             },
           );
         },

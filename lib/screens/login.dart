@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/components/my_text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:repostaffs/components/my_text.dart';
+import 'package:repostaffs/constants.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
             Column(
               children: [
                 Image.asset(
-                  'assets/girllog.png',
+                  'assets/logo.png',
                   height: 300,
                   width: 300,
                 ),
@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
                   ],
                 ),
                 SizedBox(
-                  height: 55.0,
+                  height: 45.0,
                 ),
                 Container(
                   width: 290.0,
@@ -162,19 +162,19 @@ class _LoginState extends State<Login> {
                         ElevatedButton(
                           onPressed: () {},
                           style: ButtonStyle(
-                            elevation: MaterialStateProperty.all<double>(15),
+                            // elevation: MaterialStateProperty.all<double>(15),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
-                              (RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  19,
-                                ),
-                              )),
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(19),
+                              ),
                             ),
                             minimumSize:
                                 MaterialStateProperty.all<Size>(Size(120, 55)),
                             backgroundColor:
                                 MaterialStateProperty.all((PRIMARY)),
+                            // fixedSize:
+                            //     MaterialStateProperty.all<Size>(Size(120, 55)),
                           ),
                           child: MyText(
                             'Sign in',
