@@ -17,9 +17,9 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
-          left: 40,
-          top: 100,
-          right: 40,
+          left: 0,
+          top: 0,
+          right: 0,
         ),
         child: ListView(
           children: [
@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
               children: [
                 Image.asset(
                   'assets/girllog.png',
-                  height: 150,
+                  height: 300,
                   width: 300,
                 ),
                 Row(
@@ -56,11 +56,11 @@ class _LoginState extends State<Login> {
                   ],
                 ),
                 SizedBox(
-                  height: 65.0,
+                  height: 55.0,
                 ),
                 Container(
-                  width: double.infinity,
-                  height: 350.0,
+                  width: 290.0,
+                  height: 365.0,
                   child: Form(
                     child: Column(
                       children: [
@@ -105,7 +105,6 @@ class _LoginState extends State<Login> {
                           // controller: ,
                           //validator,
                           autocorrect: true,
-                          autofocus: true,
 
                           cursorColor: Colors.white,
                         ),
@@ -154,8 +153,7 @@ class _LoginState extends State<Login> {
                           // controller: ,
                           //validator,
                           autocorrect: true,
-                          autofocus: true,
-
+                          autofocus: false,
                           cursorColor: Colors.white,
                         ),
                         SizedBox(
@@ -173,7 +171,7 @@ class _LoginState extends State<Login> {
                                 ),
                               )),
                             ),
-                            fixedSize:
+                            minimumSize:
                                 MaterialStateProperty.all<Size>(Size(120, 55)),
                             backgroundColor:
                                 MaterialStateProperty.all((PRIMARY)),
@@ -197,7 +195,9 @@ class _LoginState extends State<Login> {
                               size: 16,
                             ),
                             InkWell(
-                              // onTap: (){}, //Register
+                              onTap: () {
+                                Navigator.pushNamed(context, 'Register');
+                              }, //Register
                               child: MyText(
                                 'Sign Up.',
                                 color: Colors.white,
@@ -207,26 +207,6 @@ class _LoginState extends State<Login> {
                             )
                           ],
                         )
-                        // RichText(
-                        //   text: TextSpan(children: [
-                        //     TextSpan(
-                        //       text: 'Don\'t have an account? ',
-                        //       style: GoogleFonts.poppins(
-                        //         color: Colors.white,
-                        //         fontSize: 16,
-                        //         fontWeight: FontWeight.w500,
-                        //       ),
-                        //     ),
-                        //     TextSpan(
-                        //       text: 'Sign Up.',
-                        //       style: GoogleFonts.poppins(
-                        //         color: Colors.white,
-                        //         fontSize: 20,
-                        //         fontWeight: FontWeight.w600,
-                        //       ),
-                        //     ),
-                        //   ]),
-                        // ),
                       ],
                     ),
                   ),
