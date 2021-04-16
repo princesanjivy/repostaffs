@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:repostaffs/LoginPage.dart';
+import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/constants.dart';
 
 void main() {
@@ -15,6 +17,18 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        buttonColor: Colors.white,
+        
+     
+      
+      // textTheme: GoogleFonts.poppinsTextTheme().apply(
+      //   bodyColor: Colors.white,
+      // ),
+
         // textTheme: GoogleFonts.poppinsTextTheme().apply(
         //   bodyColor: Colors.white,
         // ),
@@ -22,7 +36,8 @@ class _MyAppState extends State<MyApp> {
         canvasColor: SECONDARY,
         accentColor: PRIMARY,
       ),
-      // home: StaffStatusAdmin(),
+      home: Login(),
+
     );
   }
 }
