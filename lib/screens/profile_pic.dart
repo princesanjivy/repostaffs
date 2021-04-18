@@ -172,6 +172,10 @@ class _ProfileState extends State<Profile> {
             ElevatedButton(
               onPressed: () {
                 //navigate to home screen
+                /// change to whatever code you want
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context)=>
+                ));
               },
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all<double>(15),
