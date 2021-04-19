@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/format_date.dart';
 
 class StaffAttendance extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _StaffAttendanceState extends State<StaffAttendance> {
   QRViewController controller;
 
   final GlobalKey qrKey = GlobalKey();
-  String code = DateFormat.yMMMMEEEEd().format(DateTime.now()).toString();
+  String code = dateToString(DateTime.now());
 
   @override
   void reassemble() {

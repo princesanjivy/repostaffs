@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:form_field_validator/form_field_validator.dart';
+import 'package:repostaffs/screens/attendance_admin.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -171,7 +172,15 @@ class _LoginState extends State<Login> {
                         height: 55.0,
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          /// change to whatever code you want
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AttendancePreview(),
+                            ),
+                          );
+                        },
                         style: ButtonStyle(
                           // elevation: MaterialStateProperty.all<double>(15),
                           shape:
