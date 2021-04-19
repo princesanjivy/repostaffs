@@ -1,11 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/sign_up.dart';
-import 'package:repostaffs/screens/staff_status_admin.dart';
 import 'package:repostaffs/screens/login.dart';
 import 'package:repostaffs/screens/profile_pic.dart';
+import 'package:repostaffs/screens/sign_up.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

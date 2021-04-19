@@ -1,12 +1,11 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:repostaffs/screens/login.dart';
-import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/sign_up.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:repostaffs/components/my_text.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:repostaffs/components/my_text.dart';
+import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/staff_attendance.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -173,9 +172,11 @@ class _ProfileState extends State<Profile> {
               onPressed: () {
                 //navigate to home screen
                 /// change to whatever code you want
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=>
-                ));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StaffAttendance(),
+                    ));
               },
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all<double>(15),
