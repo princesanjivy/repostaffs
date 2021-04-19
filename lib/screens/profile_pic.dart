@@ -171,7 +171,8 @@ class _ProfileState extends State<Profile> {
             ),
             ElevatedButton(
               onPressed: () {
-                //navigate to home screen
+                Navigator.pushNamed(context, 'LoginPage');
+                //Image path save somewhere.
               },
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all<double>(15),

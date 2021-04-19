@@ -4,6 +4,7 @@ import 'package:repostaffs/screens/sign_up.dart';
 import 'package:repostaffs/screens/staff_status_admin.dart';
 import 'package:repostaffs/screens/login.dart';
 import 'package:repostaffs/screens/profile_pic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,6 +16,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  initSharedPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("SignedIn", false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

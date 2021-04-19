@@ -3,8 +3,9 @@ import 'package:repostaffs/screens/login.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-
 import 'package:repostaffs/components/my_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -17,6 +18,15 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   TextEditingController _conpassword = TextEditingController();
+
+  void register() async {
+    User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _email.text, password: _password.text))
+        .user;
+    final prefs = await SharedPreferences.getInstance();
+    print(prefs.getBool("SignedIn"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,12 +91,11 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _name,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: RequiredValidator(
                             errorText: 'This Field cannot be left empty'),
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -116,7 +125,7 @@ class _SignUpState extends State<SignUp> {
                               color: Colors.white,
                             ),
                           ),
-                          hintText: 'Enter your Email ID',
+                          hintText: 'Enter your Mobile Number',
                           hintStyle: GoogleFonts.poppins(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w300,
@@ -130,7 +139,7 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _mobno,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: MultiValidator([
                           RequiredValidator(
@@ -142,7 +151,6 @@ class _SignUpState extends State<SignUp> {
                               errorText: 'Only 10 numbers are allowed'),
                         ]),
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -186,16 +194,14 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller:
+                        controller: _email,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: MultiValidator([
                           RequiredValidator(
                               errorText: 'This Field cannot be left empty'),
                           EmailValidator(errorText: 'Invalid Mail ID'),
                         ]),
-
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -240,14 +246,13 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _password,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: MultiValidator([
                           RequiredValidator(
                               errorText: 'This Field cannot be left empty'),
                         ]),
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -292,14 +297,15 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _conpassword,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: MultiValidator([
-                          RequiredValidator(
-                              errorText: 'This Field cannot be left empty'),
-                        ]),
+                        validator: MultiValidator(
+                          [
+                            RequiredValidator(
+                                errorText: 'This Field cannot be left empty'),
+                          ],
+                        ),
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -307,7 +313,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          //firebase Code to be added(Backend)
+                          register();
                           Navigator.pushNamed(context, 'ProfilePic');
                         },
                         style: ButtonStyle(

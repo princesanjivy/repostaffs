@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -13,9 +15,22 @@ class _LoginState extends State<Login> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
-  String validate(String data) {
-    if (data.isEmpty) return 'Required';
-    return 'null';
+  void signIn() async {
+    User user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _email.text, password: _password.text))
+        .user;
+    if (user != null) {
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        prefs.setBool("signedIn", true);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Account doesnt exists in Firebase'),
+        ),
+      );
+    }
   }
 
   @override
@@ -96,7 +111,6 @@ class _LoginState extends State<Login> {
                             letterSpacing: 1.0,
                           ),
                         ),
-
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: MultiValidator(
                           [
@@ -111,10 +125,8 @@ class _LoginState extends State<Login> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
-                        //validator,
+                        controller: _email,
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -160,7 +172,7 @@ class _LoginState extends State<Login> {
                           letterSpacing: 1.0,
                         ),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        // controller: ,
+                        controller: _password,
                         validator: RequiredValidator(
                             errorText: 'This field cannot be left empty'),
                         autocorrect: true,
@@ -171,7 +183,9 @@ class _LoginState extends State<Login> {
                         height: 55.0,
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          signIn();
+                        },
                         style: ButtonStyle(
                           // elevation: MaterialStateProperty.all<double>(15),
                           shape:
