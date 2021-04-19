@@ -3,7 +3,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/attendance_admin.dart';
+import 'package:repostaffs/screens/add_edit_service.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -177,16 +177,16 @@ class _LoginState extends State<Login> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AttendancePreview(),
+                              builder: (context) => AddEditService(),
                             ),
                           );
                         },
                         style: ButtonStyle(
-                          // elevation: MaterialStateProperty.all<double>(15),
+                          // elevation: MaterialStateProperty.all<double>(12),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(19),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
                           minimumSize:
