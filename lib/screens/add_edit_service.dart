@@ -21,25 +21,35 @@ class _AddEditServiceState extends State<AddEditService> {
             child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection("services")
+                    .orderBy("name")
                     .snapshots(),
                 builder: (context, servicesSnapshot) {
                   if (!servicesSnapshot.hasData)
                     return Center(child: CircularProgressIndicator());
 
-                  return ListView.builder(
-                    itemCount: servicesSnapshot.data.size,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        child: MyRowText(
-                          heading:
-                              servicesSnapshot.data.docs[index].get("name"),
-                          text: servicesSnapshot.data.docs[index].get("price"),
-                        ),
-                      );
-                    },
-                  );
+                  return servicesSnapshot.data.size == 0
+                      ? Center(
+                          child: MyText(
+                            "No data found!",
+                            color: Colors.white,
+                            fontWeight: "Light",
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: servicesSnapshot.data.size,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              child: MyRowText(
+                                heading: servicesSnapshot.data.docs[index]
+                                    .get("name"),
+                                text: servicesSnapshot.data.docs[index]
+                                    .get("price"),
+                              ),
+                            );
+                          },
+                        );
                 }),
           ),
           Padding(
@@ -48,11 +58,39 @@ class _AddEditServiceState extends State<AddEditService> {
               onPressed: () {
                 showDialog(
                   context: context,
+                  barrierDismissible: false,
                   builder: (context) => AlertDialog(
                     title: MyText(
                       "Add a new service",
                       fontWeight: "SemiBold",
                     ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(),
+                        TextField(),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: MyText(
+                          "CANCEL",
+                          color: PRIMARY,
+                          fontWeight: "Medium",
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: MyText(
+                          "ADD",
+                          color: PRIMARY,
+                          fontWeight: "Medium",
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
