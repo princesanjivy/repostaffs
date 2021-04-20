@@ -17,7 +17,7 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
       body: ListView.builder(
         // padding: EdgeInsets.all(16),
         itemCount: 10,
-        itemBuilder: (context, snapshot) {
+        itemBuilder: (context, index) {
           return InkWell(
             child: Padding(
               padding: EdgeInsets.all(16),

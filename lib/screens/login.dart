@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:repostaffs/screens/attendance_admin.dart';
+import 'package:repostaffs/services/auth.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -12,26 +14,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  String error = '';
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
-  void signIn() async {
-    User user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: _email.text, password: _password.text))
-        .user;
-    if (user != null) {
-      final prefs = await SharedPreferences.getInstance();
-      setState(() {
-        prefs.setBool("signedIn", true);
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Account doesnt exists in Firebase'),
-        ),
-      );
-    }
-  }
+  final _formKey = GlobalKey<FormState>();
+
+  AuthService _auth = new AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +66,7 @@ class _LoginState extends State<Login> {
                 width: 290.0,
                 height: 380.0,
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       TextFormField(
@@ -183,8 +173,20 @@ class _LoginState extends State<Login> {
                         height: 55.0,
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          signIn();
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            dynamic result =
+                                await _auth.signInWithEmailAndPassword(
+                                    _email.text, _password.text);
+                            if (result == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Account doesnt exists in Firebase'),
+                                ),
+                              );
+                            }
+                          }
                         },
                         style: ButtonStyle(
                           // elevation: MaterialStateProperty.all<double>(15),
