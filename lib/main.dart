@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/models/user.dart';
 import 'package:repostaffs/screens/home_page.dart';
 import 'package:repostaffs/screens/login.dart';
 import 'package:repostaffs/screens/profile_pic.dart';
@@ -9,6 +8,7 @@ import 'package:repostaffs/screens/sign_up.dart';
 import 'package:provider/provider.dart';
 import 'package:repostaffs/services/auth.dart';
 import 'package:repostaffs/screens/Wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,9 +25,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<UserClass>.value(
-      initialData: null,
-      value: AuthService().user,
+    return MultiProvider(
+      providers: [
+        Provider<AuthenticationService>(
+          create: (_) => AuthenticationService(FirebaseAuth.instance),
+        ),
+        StreamProvider(
+          initialData: null,
+          create: (context) =>
+              context.read<AuthenticationService>().authStateChanges,
+        )
+      ],
       child: MaterialApp(
         routes: {
           'LoginPage': (context) => Login(),

@@ -15,10 +15,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  AuthService _auth = new AuthService();
   final _formKey = GlobalKey<FormState>();
-
-  String error = '';
 
   TextEditingController _name = TextEditingController();
   TextEditingController _mobno = TextEditingController();
@@ -252,6 +249,7 @@ class _SignUpState extends State<SignUp> {
                           if (val.length < 6) {
                             return 'Password must be 6 or more characters in length';
                           }
+                          return null;
                         },
                         autocorrect: true,
                         cursorColor: Colors.white,
@@ -374,14 +372,6 @@ class _SignUpState extends State<SignUp> {
                           )
                         ],
                       ),
-                      Center(
-                        child: Text(
-                          error,
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),

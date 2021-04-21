@@ -9,7 +9,6 @@ import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'package:repostaffs/models/user.dart';
 import 'package:repostaffs/helpers/upload_file.dart';
 
 class Profile extends StatefulWidget {
@@ -26,7 +25,7 @@ class _ProfileState extends State<Profile> {
   File _selectedFile;
   bool _inProcess = false;
 
-  AuthService _auth = new AuthService();
+  // AuthService _auth = new AuthService();
   UploadImageToFireStore imageToFireStore = UploadImageToFireStore();
 
   getImageWidget() {
@@ -74,7 +73,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserClass>(context);
+    // final user = Provider.of<UserClass>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -190,8 +189,9 @@ class _ProfileState extends State<Profile> {
                 size: 18,
               ),
               onPressed: () async {
-                await _auth
-                    .registerWithEmailAndPassword(widget.email, widget.password)
+                context
+                    .read<AuthenticationService>()
+                    .signUp(email: widget.email, password: widget.password)
                     .then(
                   (result) async {
                     if (result == null) {

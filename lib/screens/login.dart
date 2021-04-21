@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:repostaffs/screens/attendance_admin.dart';
 import 'package:repostaffs/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _LoginState extends State<Login> {
 
   final _formKey = GlobalKey<FormState>();
 
-  AuthService _auth = new AuthService();
+  // AuthService _auth = new AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -175,9 +176,11 @@ class _LoginState extends State<Login> {
                       ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            dynamic result =
-                                await _auth.signInWithEmailAndPassword(
-                                    _email.text, _password.text);
+                            dynamic result = context
+                                .read<AuthenticationService>()
+                                .signIn(
+                                    email: _email.text,
+                                    password: _password.text);
                             if (result == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
