@@ -1,13 +1,22 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/home_page.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
+import 'package:repostaffs/services/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:repostaffs/helpers/upload_file.dart';
 
 class Profile extends StatefulWidget {
+  final String email;
+  final String name;
+  final String mobNo;
+  final String password;
+  Profile({this.email, this.password, this.name, this.mobNo});
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -15,6 +24,9 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   File _selectedFile;
   bool _inProcess = false;
+
+  // AuthService _auth = new AuthService();
+  UploadImageToFireStore imageToFireStore = UploadImageToFireStore();
 
   getImageWidget() {
     if (_selectedFile != null) {
@@ -61,6 +73,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    // final user = Provider.of<UserClass>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -169,14 +182,56 @@ class _ProfileState extends State<Profile> {
               height: 150.0,
             ),
             ElevatedButton(
-              onPressed: () {
-                //navigate to home screen
-                /// change to whatever code you want
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StaffAttendance(),
-                    ));
+              child: MyText(
+                'Done',
+                color: Colors.white,
+                fontWeight: 'Light',
+                size: 18,
+              ),
+              onPressed: () async {
+                context
+                    .read<AuthenticationService>()
+                    .signUp(email: widget.email, password: widget.password)
+                    .then(
+                  (result) async {
+                    if (result == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Failed to create account,Please enter a Valid Email',
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: MyText(
+                            'Account Created Successfully',
+                            color: Colors.black,
+                          ),
+                          backgroundColor: Colors.white,
+                        ),
+                      );
+                      await UploadImageToFireStore(
+                              file: _selectedFile, path: 'userpic')
+                          .uploadAndGetUrl()
+                          .then(
+                        (imageUrl) async {
+                          FirebaseFirestore firestore =
+                              FirebaseFirestore.instance;
+                          firestore.collection('users').doc(result.uid).set(
+                            {
+                              'email': widget.email,
+                              'name': widget.name,
+                              'phoneNo': widget.mobNo,
+                              'imageUrl': imageUrl
+                            },
+                          );
+                        },
+                      );
+                    }
+                  },
+                );
               },
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all<double>(15),
@@ -189,12 +244,6 @@ class _ProfileState extends State<Profile> {
                 ),
                 minimumSize: MaterialStateProperty.all<Size>(Size(120, 55)),
                 backgroundColor: MaterialStateProperty.all((PRIMARY)),
-              ),
-              child: MyText(
-                'Done',
-                color: Colors.white,
-                fontWeight: 'Light',
-                size: 18,
               ),
             ),
           ],

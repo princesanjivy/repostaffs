@@ -3,7 +3,11 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/add_edit_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:repostaffs/screens/attendance_admin.dart';
+import 'package:repostaffs/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -11,13 +15,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  String error = '';
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
-  String validate(String data) {
-    if (data.isEmpty) return 'Required';
-    return 'null';
-  }
+  final _formKey = GlobalKey<FormState>();
+
+  // AuthService _auth = new AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +67,7 @@ class _LoginState extends State<Login> {
                 width: 290.0,
                 height: 380.0,
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       TextFormField(
@@ -97,7 +102,6 @@ class _LoginState extends State<Login> {
                             letterSpacing: 1.0,
                           ),
                         ),
-
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: MultiValidator(
                           [
@@ -112,10 +116,8 @@ class _LoginState extends State<Login> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
-                        //validator,
+                        controller: _email,
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -161,7 +163,7 @@ class _LoginState extends State<Login> {
                           letterSpacing: 1.0,
                         ),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        // controller: ,
+                        controller: _password,
                         validator: RequiredValidator(
                             errorText: 'This field cannot be left empty'),
                         autocorrect: true,
@@ -172,21 +174,29 @@ class _LoginState extends State<Login> {
                         height: 55.0,
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          /// change to whatever code you want
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddEditService(),
-                            ),
-                          );
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            dynamic result = context
+                                .read<AuthenticationService>()
+                                .signIn(
+                                    email: _email.text,
+                                    password: _password.text);
+                            if (result == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Account doesnt exists in Firebase'),
+                                ),
+                              );
+                            }
+                          }
                         },
                         style: ButtonStyle(
-                          // elevation: MaterialStateProperty.all<double>(12),
+                          // elevation: MaterialStateProperty.all<double>(15),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(19),
                             ),
                           ),
                           minimumSize:

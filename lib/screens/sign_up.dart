@@ -3,8 +3,11 @@ import 'package:repostaffs/screens/login.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-
 import 'package:repostaffs/components/my_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:repostaffs/services/auth.dart';
+import 'package:repostaffs/screens/profile_pic.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -12,11 +15,14 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final _formKey = GlobalKey<FormState>();
+
   TextEditingController _name = TextEditingController();
   TextEditingController _mobno = TextEditingController();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   TextEditingController _conpassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +47,7 @@ class _SignUpState extends State<SignUp> {
                 width: 290.0,
                 height: 800.0,
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       TextFormField(
@@ -81,12 +88,11 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _name,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: RequiredValidator(
                             errorText: 'This Field cannot be left empty'),
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -116,7 +122,7 @@ class _SignUpState extends State<SignUp> {
                               color: Colors.white,
                             ),
                           ),
-                          hintText: 'Enter your Email ID',
+                          hintText: 'Enter your Mobile Number',
                           hintStyle: GoogleFonts.poppins(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w300,
@@ -130,7 +136,7 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _mobno,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: MultiValidator([
                           RequiredValidator(
@@ -142,7 +148,6 @@ class _SignUpState extends State<SignUp> {
                               errorText: 'Only 10 numbers are allowed'),
                         ]),
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -186,16 +191,14 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller:
+                        controller: _email,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: MultiValidator([
                           RequiredValidator(
                               errorText: 'This Field cannot be left empty'),
                           EmailValidator(errorText: 'Invalid Mail ID'),
                         ]),
-
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -226,7 +229,7 @@ class _SignUpState extends State<SignUp> {
                               color: Colors.white,
                             ),
                           ),
-                          hintText: 'Enter your Email ID',
+                          hintText: 'Enter your Password',
                           hintStyle: GoogleFonts.poppins(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w300,
@@ -240,14 +243,15 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _password,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: MultiValidator([
-                          RequiredValidator(
-                              errorText: 'This Field cannot be left empty'),
-                        ]),
+                        validator: (String val) {
+                          if (val.length < 6) {
+                            return 'Password must be 6 or more characters in length';
+                          }
+                          return null;
+                        },
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
@@ -278,7 +282,7 @@ class _SignUpState extends State<SignUp> {
                               color: Colors.white,
                             ),
                           ),
-                          hintText: 'Enter your Email ID',
+                          hintText: 'Enter your Password',
                           hintStyle: GoogleFonts.poppins(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w300,
@@ -292,23 +296,41 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.white,
                           letterSpacing: 1.0,
                         ),
-                        // controller: ,
+                        controller: _conpassword,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: MultiValidator([
-                          RequiredValidator(
-                              errorText: 'This Field cannot be left empty'),
-                        ]),
+                        validator: MultiValidator(
+                          [
+                            RequiredValidator(
+                                errorText: 'This Field cannot be left empty'),
+                          ],
+                        ),
                         autocorrect: true,
-
                         cursorColor: Colors.white,
                       ),
                       SizedBox(
                         height: 35.0,
                       ),
                       ElevatedButton(
+                        child: MyText(
+                          'Sign Up',
+                          color: Colors.white,
+                          fontWeight: 'Light',
+                          size: 18,
+                        ),
                         onPressed: () {
-                          //firebase Code to be added(Backend)
-                          Navigator.pushNamed(context, 'ProfilePic');
+                          if (_formKey.currentState.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Profile(
+                                  email: _email.text,
+                                  name: _name.text,
+                                  mobNo: _mobno.text,
+                                  password: _password.text,
+                                ),
+                              ),
+                            );
+                          }
                         },
                         style: ButtonStyle(
                           elevation: MaterialStateProperty.all<double>(15),
@@ -323,12 +345,6 @@ class _SignUpState extends State<SignUp> {
                           minimumSize:
                               MaterialStateProperty.all<Size>(Size(120, 55)),
                           backgroundColor: MaterialStateProperty.all((PRIMARY)),
-                        ),
-                        child: MyText(
-                          'Sign Up',
-                          color: Colors.white,
-                          fontWeight: 'Light',
-                          size: 18,
                         ),
                       ),
                       SizedBox(
@@ -355,7 +371,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                           )
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
