@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:repostaffs/screens/sign_up.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:repostaffs/screens/attendance_admin.dart';
 import 'package:repostaffs/services/auth.dart';
@@ -226,7 +227,12 @@ class _LoginState extends State<Login> {
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, 'Register');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUp(),
+                                ),
+                              );
                             }, //Register
                             child: MyText(
                               'Sign Up.',

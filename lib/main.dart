@@ -37,11 +37,6 @@ class _MyAppState extends State<MyApp> {
         )
       ],
       child: MaterialApp(
-        routes: {
-          'LoginPage': (context) => Login(),
-          'Register': (context) => SignUp(),
-          'ProfilePic': (context) => Profile(),
-        },
         theme: ThemeData(
           iconTheme: IconThemeData(
             color: Colors.white,
