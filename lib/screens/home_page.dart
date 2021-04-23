@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/attendance_admin.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/services/auth.dart';
 
@@ -14,9 +14,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User>();
+  void initState() {
+    super.initState();
 
+    print(Provider.of<AuthenticationService>(context, listen: false)
+        .getUser
+        .email);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // final firebaseUser = context.watch<User>();
     return Scaffold(
       appBar: MyAppBar(
         "Home",
@@ -102,8 +110,14 @@ class _HomePageState extends State<HomePage> {
                 Material(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(25),
-                    onTap:
-                        () {}, //add navigator to the Service Status Upload Page
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AttendancePreview(),
+                        ),
+                      );
+                    }, //add navigator to the Service Status Upload Page
                     splashColor: Colors.white,
                     child: Container(
                       height: 130,

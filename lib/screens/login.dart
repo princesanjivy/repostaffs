@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:repostaffs/screens/sign_up.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:repostaffs/screens/attendance_admin.dart';
 import 'package:repostaffs/services/auth.dart';
-import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   @override

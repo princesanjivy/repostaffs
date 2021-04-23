@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:repostaffs/screens/login.dart';
-import 'package:repostaffs/constants.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:repostaffs/services/auth.dart';
+import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/screens/profile_pic.dart';
 
 class SignUp extends StatefulWidget {

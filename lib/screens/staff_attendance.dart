@@ -39,27 +39,32 @@ class _StaffAttendanceState extends State<StaffAttendance> {
   attendance() async {
     await FirebaseFirestore.instance
         .collection("attendance")
-        .where("date", isEqualTo: code)
+        .doc(code)
         .get()
         .then((value) async {
-      if (value.size == 0) {
-        await FirebaseFirestore.instance.collection("attendance").add({
-          "date": code,
-          "staffs": [
-            "Prince",
-          ],
-        });
+      if (!value.exists) {
+        await FirebaseFirestore.instance.collection("attendance").doc(code).set(
+          {
+            "date": code,
+            "staffs": [
+              "Prince",
+            ],
+          },
+          SetOptions(merge: true),
+        );
 
         setState(() {
           status = 0;
+          callMethod = false;
         });
 
         return;
       } else {
-        List temp = value.docs[0].get("staffs");
+        List temp = value.get("staffs");
         if (temp.contains("Sanjivy")) {
           setState(() {
             status = 1;
+            callMethod = false;
           });
 
           return;
@@ -67,22 +72,22 @@ class _StaffAttendanceState extends State<StaffAttendance> {
           temp.add("Sanjivy");
           await FirebaseFirestore.instance
               .collection("attendance")
-              .doc(value.docs[0].id)
-              .set({
-            "staffs": temp,
-          }, SetOptions(merge: true));
+              .doc(code)
+              .set(
+            {
+              "staffs": temp,
+            },
+            SetOptions(merge: true),
+          );
 
           setState(() {
             status = 0;
+            callMethod = false;
           });
 
           return;
         }
       }
-    });
-
-    setState(() {
-      callMethod = false;
     });
   }
 
