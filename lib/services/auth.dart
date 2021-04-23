@@ -1,12 +1,11 @@
-// import 'package:repostaffs/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthenticationService {
+class AuthenticationProvider {
   final FirebaseAuth _firebaseAuth;
 
-  AuthenticationService(this._firebaseAuth);
+  AuthenticationProvider(this._firebaseAuth);
 
-  Stream<User> get authStateChanges => _firebaseAuth.idTokenChanges();
+  Stream<User> get authStateChanges => _firebaseAuth.userChanges();
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
@@ -28,6 +27,7 @@ class AuthenticationService {
       User user = (await _firebaseAuth.createUserWithEmailAndPassword(
               email: email, password: password))
           .user;
+      print('Hey');
       return user;
     } on FirebaseAuthException catch (e) {
       print(e.toString());

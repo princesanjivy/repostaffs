@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
@@ -6,6 +6,7 @@ import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,8 +15,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    super.initState();
+    Stream<User> data =
+        Provider.of<AuthenticationProvider>(context, listen: false)
+            .authStateChanges;
+    data.listen((user) {
+      print(user.email);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User>();
+    // final firebaseUser = context.watch<User>();
 
     return Scaffold(
       appBar: MyAppBar(
@@ -26,6 +38,9 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              height: 30,
+            ),
             Container(
               width: 290,
               height: 170,
@@ -36,9 +51,9 @@ class _HomePageState extends State<HomePage> {
                   fit: BoxFit.fill,
                 ),
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.black,
+                color: PRIMARY,
                 border: Border.all(
-                  color: Colors.black,
+                  color: PRIMARY,
                   width: 5.0,
                   style: BorderStyle.solid,
                 ),
@@ -66,6 +81,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       borderRadius: BorderRadius.circular(15),
                       splashColor: Colors.white,
+                      radius: 300,
                       child: Container(
                         height: 140,
                         width: 140,
@@ -77,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.qr_code_scanner,
+                                Icons.person_add_alt_1_rounded,
                                 size: 25.0,
                               ),
                               Padding(
@@ -99,60 +115,66 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: 30.0,
                 ),
-                Material(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(25),
-                    onTap:
-                        () {}, //add navigator to the Service Status Upload Page
-                    splashColor: Colors.white,
-                    child: Container(
-                      height: 130,
-                      width: 136,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(
-                          20.0,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              size: 30.0,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      MyText(
-                                        'Service',
-                                        color: Colors.white,
-                                        fontWeight: 'Medium',
-                                        size: 15,
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      MyText(
-                                        'Status',
-                                        color: Colors.white,
-                                        fontWeight: 'Medium',
-                                        size: 15,
-                                      )
-                                    ],
-                                  ),
-                                ],
+                Container(
+                  decoration: BoxDecoration(
+                    color: PRIMARY,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(15),
+                      onTap:
+                          () {}, //add navigator to the Service Status Upload Page
+                      splashColor: Colors.white,
+                      radius: 300,
+                      child: Container(
+                        height: 140,
+                        width: 140,
+                        child: Padding(
+                          padding: EdgeInsets.all(
+                            20.0,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                size: 30.0,
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        MyText(
+                                          'Service',
+                                          color: Colors.white,
+                                          fontWeight: 'Medium',
+                                          size: 15,
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        MyText(
+                                          'Status',
+                                          color: Colors.white,
+                                          fontWeight: 'Medium',
+                                          size: 15,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -165,40 +187,44 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Material(
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(25),
-                      onTap: () {}, //Add Navigator to the Gallery Page
-                      splashColor: Colors.white,
-                      child: Container(
-                        height: 130,
-                        width: 136,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(
-                            20.0,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.photo_library_rounded,
-                                color: Colors.white,
-                                size: 25.0,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: MyText(
-                                  'Gallery',
+                  Container(
+                    decoration: BoxDecoration(
+                      color: PRIMARY,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(15),
+                        onTap: () {}, //Add Navigator to the Gallery Page
+                        splashColor: Colors.white,
+                        radius: 300,
+                        child: Container(
+                          height: 140,
+                          width: 140,
+                          child: Padding(
+                            padding: EdgeInsets.all(
+                              20.0,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.photo_library_rounded,
                                   color: Colors.white,
-                                  fontWeight: 'Medium',
-                                  size: 15,
+                                  size: 25.0,
                                 ),
-                              )
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: MyText(
+                                    'Gallery',
+                                    color: Colors.white,
+                                    fontWeight: 'Medium',
+                                    size: 15,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -207,42 +233,46 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: 30.0,
                   ),
-                  Material(
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(25),
-                      onTap: () {
-                        context.read<AuthenticationService>().signOut();
-                      },
-                      splashColor: Colors.white,
-                      child: Container(
-                        height: 130,
-                        width: 136,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(
-                            20.0,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.logout,
-                                color: Colors.white,
-                                size: 25.0,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: MyText(
-                                  'Logout',
+                  Container(
+                    decoration: BoxDecoration(
+                      color: PRIMARY,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(15),
+                        onTap: () {
+                          context.read<AuthenticationProvider>().signOut();
+                        },
+                        splashColor: Colors.white,
+                        radius: 300,
+                        child: Container(
+                          height: 140,
+                          width: 140,
+                          child: Padding(
+                            padding: EdgeInsets.all(
+                              20.0,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.logout,
                                   color: Colors.white,
-                                  fontWeight: 'Medium',
-                                  size: 15,
+                                  size: 25.0,
                                 ),
-                              )
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: MyText(
+                                    'Logout',
+                                    color: Colors.white,
+                                    fontWeight: 'Medium',
+                                    size: 15,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),

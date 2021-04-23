@@ -1,15 +1,15 @@
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/home_page.dart';
-import 'package:repostaffs/screens/staff_attendance.dart';
-import 'package:repostaffs/services/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 import 'package:repostaffs/helpers/upload_file.dart';
+import 'package:repostaffs/services/auth.dart';
 
 class Profile extends StatefulWidget {
   final String email;
@@ -24,6 +24,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   File _selectedFile;
   bool _inProcess = false;
+  bool _loading = false;
 
   // AuthService _auth = new AuthService();
   UploadImageToFireStore imageToFireStore = UploadImageToFireStore();
@@ -74,181 +75,227 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     // final user = Provider.of<UserClass>(context);
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 45.0,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 30.0,
-                ),
-                MyText(
-                  'Upload an Image for\nyour Profile',
-                  color: Colors.white,
-                  fontWeight: 'Medium',
-                  size: 24.0,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 200.0,
-            ),
-            Stack(children: [
-              CircleAvatar(
-                backgroundImage: getImageWidget(),
-                radius: 100.0,
-              ),
-              Positioned(
-                top: 150,
-                left: 150,
-                child: CircleAvatar(
-                  radius: 25.0,
-                  backgroundColor: PRIMARY,
-                  child: IconButton(
-                    splashRadius: 30,
-                    onPressed: () {
-                      showModalBottomSheet(
-                        enableDrag: true,
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40.0),
-                                topRight: Radius.circular(40.0),
-                              ),
-                              color: Colors.white,
-                            ),
-                            height: 150,
-                            width: double.infinity,
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      getImage(ImageSource.camera);
-                                    }, //ImageSource.camera
-                                    icon: Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.black,
-                                    ),
-                                    label: MyText(
-                                      'Capture',
-                                      color: Colors.black,
-                                      fontWeight: 'Medium',
-                                      size: 16,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20.0,
-                                  ),
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      getImage(ImageSource.gallery);
-                                    }, //ImageSource.gallery
-                                    icon: Icon(
-                                      Icons.photo_library,
-                                      color: Colors.black,
-                                    ),
-                                    label: MyText(
-                                      'Gallery',
-                                      color: Colors.black,
-                                      fontWeight: 'Medium',
-                                      size: 16,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    icon: Icon(
-                      Icons.camera_alt,
-                    ),
-                    color: Colors.white,
+    return _loading
+        ? Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    backgroundColor: PRIMARY,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
-                ),
-              )
-            ]),
-            SizedBox(
-              height: 150.0,
-            ),
-            ElevatedButton(
-              child: MyText(
-                'Done',
-                color: Colors.white,
-                fontWeight: 'Light',
-                size: 18,
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  MyText(
+                    'Creating your account and Signing in,',
+                    color: Colors.white,
+                    fontWeight: 'Medium',
+                    size: 16,
+                  ),
+                  MyText(
+                    'Please Wait',
+                    color: Colors.white,
+                    fontWeight: 'Medium',
+                    size: 16,
+                  )
+                ],
               ),
-              onPressed: () async {
-                context
-                    .read<AuthenticationService>()
-                    .signUp(email: widget.email, password: widget.password)
-                    .then(
-                  (result) async {
-                    if (result == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Failed to create account,Please enter a Valid Email',
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: MyText(
-                            'Account Created Successfully',
-                            color: Colors.black,
-                          ),
-                          backgroundColor: Colors.white,
-                        ),
-                      );
-                      await UploadImageToFireStore(
-                              file: _selectedFile, path: 'userpic')
-                          .uploadAndGetUrl()
-                          .then(
-                        (imageUrl) async {
-                          FirebaseFirestore firestore =
-                              FirebaseFirestore.instance;
-                          firestore.collection('users').doc(result.uid).set(
-                            {
-                              'email': widget.email,
-                              'name': widget.name,
-                              'phoneNo': widget.mobNo,
-                              'imageUrl': imageUrl
-                            },
-                          );
-                        },
-                      );
-                    }
-                  },
-                );
-              },
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all<double>(15),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  (RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      19,
+            ),
+          )
+        : Scaffold(
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 45.0,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 30.0,
+                      ),
+                      MyText(
+                        'Upload an Image for\nyour Profile',
+                        color: Colors.white,
+                        fontWeight: 'Medium',
+                        size: 24.0,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 200.0,
+                  ),
+                  Stack(children: [
+                    CircleAvatar(
+                      backgroundImage: getImageWidget(),
+                      radius: 100.0,
                     ),
-                  )),
-                ),
-                minimumSize: MaterialStateProperty.all<Size>(Size(120, 55)),
-                backgroundColor: MaterialStateProperty.all((PRIMARY)),
+                    Positioned(
+                      top: 150,
+                      left: 150,
+                      child: CircleAvatar(
+                        radius: 25.0,
+                        backgroundColor: PRIMARY,
+                        child: IconButton(
+                          splashRadius: 30,
+                          onPressed: () {
+                            showModalBottomSheet(
+                              enableDrag: true,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(40.0),
+                                      topRight: Radius.circular(40.0),
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  height: 150,
+                                  width: double.infinity,
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        TextButton.icon(
+                                          onPressed: () {
+                                            getImage(ImageSource.camera);
+                                          }, //ImageSource.camera
+                                          icon: Icon(
+                                            Icons.camera_alt,
+                                            color: Colors.black,
+                                          ),
+                                          label: MyText(
+                                            'Capture',
+                                            color: Colors.black,
+                                            fontWeight: 'Medium',
+                                            size: 16,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        TextButton.icon(
+                                          onPressed: () {
+                                            getImage(ImageSource.gallery);
+                                          }, //ImageSource.gallery
+                                          icon: Icon(
+                                            Icons.photo_library,
+                                            color: Colors.black,
+                                          ),
+                                          label: MyText(
+                                            'Gallery',
+                                            color: Colors.black,
+                                            fontWeight: 'Medium',
+                                            size: 16,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          icon: Icon(
+                            Icons.camera_alt,
+                          ),
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  SizedBox(
+                    height: 150.0,
+                  ),
+                  ElevatedButton(
+                    child: MyText(
+                      'Done',
+                      color: Colors.white,
+                      fontWeight: 'Light',
+                      size: 18,
+                    ),
+                    onPressed: () async {
+                      if (_selectedFile == null) {
+                        Fluttertoast.showToast(
+                          msg: 'Please Upload an Image',
+                          backgroundColor: Colors.white,
+                          textColor: PRIMARY,
+                        );
+                      } else {
+                        setState(() {
+                          _loading = true;
+                        });
+                        await context
+                            .read<AuthenticationProvider>()
+                            .signUp(
+                                email: widget.email, password: widget.password)
+                            .then((result) async {
+                          print('Hello by Pro_Pic');
+                          if (result == null) {
+                            Fluttertoast.showToast(
+                                msg:
+                                    'Failed to create account, Please enter a valid email address',
+                                backgroundColor: Colors.white,
+                                textColor: PRIMARY);
+                            Navigator.pop(context);
+                          } else {
+                            await UploadImageToFireStore(
+                                    file: _selectedFile, path: 'userpic')
+                                .uploadAndGetUrl()
+                                .then(
+                              (imageUrl) async {
+                                FirebaseFirestore firestore =
+                                    FirebaseFirestore.instance;
+                                await firestore
+                                    .collection('users')
+                                    .doc(result.uid)
+                                    .set(
+                                  {
+                                    'email': widget.email,
+                                    'name': widget.name,
+                                    'phoneNo': widget.mobNo,
+                                    'imageUrl': imageUrl
+                                  },
+                                );
+                              },
+                            );
+                            Fluttertoast.showToast(
+                                msg: 'Account Created Successfully!',
+                                backgroundColor: Colors.white,
+                                textColor: PRIMARY);
+
+                            setState(() {
+                              int count = 0;
+                              Navigator.of(context)
+                                  .popUntil((_) => count++ >= 2);
+                              _loading = false;
+                            });
+                          }
+                        });
+                      }
+                    },
+                    style: ButtonStyle(
+                      elevation: MaterialStateProperty.all<double>(15),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        (RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            19,
+                          ),
+                        )),
+                      ),
+                      minimumSize:
+                          MaterialStateProperty.all<Size>(Size(120, 55)),
+                      backgroundColor: MaterialStateProperty.all((PRIMARY)),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
