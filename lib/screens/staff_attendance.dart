@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/helpers/format_date.dart';
+import 'package:repostaffs/providers/auth.dart';
 
 class StaffAttendance extends StatefulWidget {
   @override
@@ -37,6 +39,11 @@ class _StaffAttendanceState extends State<StaffAttendance> {
   }
 
   attendance() async {
+    String uid = Provider.of<AuthenticationProvider>(context, listen: false)
+        .getUser
+        .uid
+        .toString();
+
     await FirebaseFirestore.instance
         .collection("attendance")
         .doc(code)
@@ -47,7 +54,7 @@ class _StaffAttendanceState extends State<StaffAttendance> {
           {
             "date": code,
             "staffs": [
-              "Prince",
+              uid,
             ],
           },
           SetOptions(merge: true),
@@ -61,7 +68,7 @@ class _StaffAttendanceState extends State<StaffAttendance> {
         return;
       } else {
         List temp = value.get("staffs");
-        if (temp.contains("Sanjivy")) {
+        if (temp.contains(uid)) {
           setState(() {
             status = 1;
             callMethod = false;
@@ -69,7 +76,7 @@ class _StaffAttendanceState extends State<StaffAttendance> {
 
           return;
         } else {
-          temp.add("Sanjivy");
+          temp.add(uid);
           await FirebaseFirestore.instance
               .collection("attendance")
               .doc(code)

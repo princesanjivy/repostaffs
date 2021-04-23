@@ -10,8 +10,10 @@ class Wrapper extends StatelessWidget {
     final firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
+      print('Hello by Wrapper');
       return HomePage();
     }
+
     return Login();
   }
 }

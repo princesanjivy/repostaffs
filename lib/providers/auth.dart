@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthenticationService {
+class AuthenticationProvider {
   final FirebaseAuth _firebaseAuth;
   User user;
 
-  AuthenticationService(this._firebaseAuth) {
+  AuthenticationProvider(this._firebaseAuth) {
     this.user = _firebaseAuth.currentUser;
   }
 

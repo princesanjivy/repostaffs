@@ -42,31 +42,43 @@ class _AttendancePreviewState extends State<AttendancePreview> {
               : ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              "https://images.unsplash.com/photo-1618374509394-3606c0aaf289?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80",
-                            ),
-                            backgroundColor: PRIMARY,
-                          ),
+                    return StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(data[index])
+                            .snapshots(),
+                        builder: (context, userSnapshot) {
+                          if (!userSnapshot.hasData)
+                            return Center(child: CircularProgressIndicator());
 
-                          /// todo change into separate class
-                          SizedBox(
-                            width: 16,
-                          ),
-                          MyText(
-                            data[index],
-                            size: 16,
-                            fontWeight: "Light",
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    );
+                          return !userSnapshot.data.exists
+                              ? Container()
+                              : Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                          userSnapshot.data.get("imageUrl"),
+                                        ),
+                                        backgroundColor: PRIMARY,
+                                      ),
+
+                                      /// todo change into separate class
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      MyText(
+                                        userSnapshot.data.get("name"),
+                                        size: 16,
+                                        fontWeight: "Light",
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                        });
                   },
                 );
         },
