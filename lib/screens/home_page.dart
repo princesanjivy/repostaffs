@@ -1,9 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:repostaffs/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
+import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/staff_attendance.dart';
+import 'package:repostaffs/services/auth.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,87 +18,79 @@ class _HomePageState extends State<HomePage> {
     final firebaseUser = context.watch<User>();
 
     return Scaffold(
+      appBar: MyAppBar(
+        "Home",
+      ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 50.0,
-              child: Text('Hello' + firebaseUser.uid),
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 30,
+            Container(
+              width: 290,
+              height: 170,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                      'https://djx5h8pabpett.cloudfront.net/wp-content/uploads/sites/4/2016/04/28071704/ToniGuy.jpg'),
+                  fit: BoxFit.fill,
                 ),
-                MyText(
-                  'Home',
-                  color: Colors.white,
-                  size: 24,
-                  fontWeight: 'Medium',
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 60,
-            ),
-            Center(
-              child: Container(
-                width: 290,
-                height: 170,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'https://djx5h8pabpett.cloudfront.net/wp-content/uploads/sites/4/2016/04/28071704/ToniGuy.jpg'),
-                    fit: BoxFit.fill,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.black,
+                border: Border.all(
                   color: Colors.black,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 5.0,
-                    style: BorderStyle.solid,
-                  ),
+                  width: 5.0,
+                  style: BorderStyle.solid,
                 ),
               ),
             ),
-            SizedBox(height: 110),
+            SizedBox(height: 100),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Material(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(25),
-                    onTap: () {}, //add navigator to the Attendance page
-                    splashColor: Colors.white,
-                    child: Container(
-                      height: 130,
-                      width: 136,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(
-                          20.0,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.qr_code_scanner,
-                              size: 25.0,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
-                              child: MyText(
-                                'Attendance',
-                                color: Colors.white,
-                                fontWeight: 'Medium',
-                                size: 15,
+                Container(
+                  decoration: BoxDecoration(
+                    color: PRIMARY,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StaffAttendance(),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(15),
+                      splashColor: Colors.white,
+                      child: Container(
+                        height: 140,
+                        width: 140,
+                        child: Padding(
+                          padding: EdgeInsets.all(
+                            20.0,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.qr_code_scanner,
+                                size: 25.0,
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: EdgeInsets.only(top: 10.0),
+                                child: MyText(
+                                  'Attendance',
+                                  color: Colors.white,
+                                  fontWeight: 'Medium',
+                                  size: 15,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
