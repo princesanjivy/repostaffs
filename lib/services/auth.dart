@@ -4,7 +4,9 @@ class AuthenticationService {
   final FirebaseAuth _firebaseAuth;
   User user;
 
-  AuthenticationService(this._firebaseAuth);
+  AuthenticationService(this._firebaseAuth) {
+    this.user = _firebaseAuth.currentUser;
+  }
 
   Stream<User> get authStateChanges => _firebaseAuth.idTokenChanges();
   User get getUser => user;

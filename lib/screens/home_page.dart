@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/add_edit_service.dart';
 import 'package:repostaffs/screens/attendance_admin.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/services/auth.dart';
@@ -16,6 +17,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    // Stream<User> data =
+    //     Provider.of<AuthenticationService>(context, listen: false)
+    //         .authStateChanges;
+    // data.listen((user) {
+    //   print(user.email);
+    // });
 
     print(Provider.of<AuthenticationService>(context, listen: false)
         .getUser
@@ -182,7 +190,14 @@ class _HomePageState extends State<HomePage> {
                   Material(
                     child: InkWell(
                       borderRadius: BorderRadius.circular(25),
-                      onTap: () {}, //Add Navigator to the Gallery Page
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddEditService(),
+                          ),
+                        );
+                      }, //Add Navigator to the Gallery Page
                       splashColor: Colors.white,
                       child: Container(
                         height: 130,

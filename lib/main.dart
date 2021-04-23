@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
           initialData: null,
           create: (context) =>
               context.read<AuthenticationService>().authStateChanges,
-        )
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(

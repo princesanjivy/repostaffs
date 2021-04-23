@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/components/row_text.dart';
@@ -11,6 +12,9 @@ class AddEditService extends StatefulWidget {
 }
 
 class _AddEditServiceState extends State<AddEditService> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +48,9 @@ class _AddEditServiceState extends State<AddEditService> {
                               child: MyRowText(
                                 heading: servicesSnapshot.data.docs[index]
                                     .get("name"),
-                                text: servicesSnapshot.data.docs[index]
-                                    .get("price"),
+                                text: "₹" +
+                                    servicesSnapshot.data.docs[index]
+                                        .get("price"),
                               ),
                             );
                           },
@@ -67,8 +72,23 @@ class _AddEditServiceState extends State<AddEditService> {
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        TextField(),
-                        TextField(),
+                        TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: "Service Name",
+                            labelStyle: GoogleFonts.poppins(),
+                          ),
+                          style: GoogleFonts.poppins(),
+                        ),
+                        TextField(
+                          controller: _priceController,
+                          decoration: InputDecoration(
+                            labelText: "Price",
+                            labelStyle: GoogleFonts.poppins(),
+                          ),
+                          style: GoogleFonts.poppins(),
+                          keyboardType: TextInputType.number,
+                        ),
                       ],
                     ),
                     actions: [
@@ -83,7 +103,20 @@ class _AddEditServiceState extends State<AddEditService> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await FirebaseFirestore.instance
+                              .collection("services")
+                              .add(
+                            {
+                              "name": _nameController.text,
+                              "price": _priceController.text,
+                            },
+                          );
+
+                          Navigator.pop(context);
+                          _nameController.clear();
+                          _priceController.clear();
+                        },
                         child: MyText(
                           "ADD",
                           color: PRIMARY,
