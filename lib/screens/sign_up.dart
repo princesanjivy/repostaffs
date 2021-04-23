@@ -294,12 +294,14 @@ class _SignUpState extends State<SignUp> {
                         ),
                         controller: _conpassword,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: MultiValidator(
-                          [
-                            RequiredValidator(
-                                errorText: 'This Field cannot be left empty'),
-                          ],
-                        ),
+                        validator: (String value) {
+                          if (value.compareTo(_password.text) != 0) {
+                            return 'Password and Confirm Password does not match';
+                          } else if (value.isEmpty) {
+                            return 'This field cannot be left empty';
+                          }
+                          return null;
+                        },
                         autocorrect: true,
                         cursorColor: Colors.white,
                       ),

@@ -8,7 +8,7 @@ import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/helpers/format_date.dart';
-import 'package:repostaffs/services/auth.dart';
+import 'package:repostaffs/providers/auth.dart';
 
 class StaffAttendance extends StatefulWidget {
   @override
@@ -39,7 +39,7 @@ class _StaffAttendanceState extends State<StaffAttendance> {
   }
 
   attendance() async {
-    String uid = Provider.of<AuthenticationService>(context, listen: false)
+    String uid = Provider.of<AuthenticationProvider>(context, listen: false)
         .getUser
         .uid
         .toString();
