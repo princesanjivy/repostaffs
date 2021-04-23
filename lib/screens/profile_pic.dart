@@ -1,15 +1,14 @@
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/home_page.dart';
-import 'package:repostaffs/screens/staff_attendance.dart';
-import 'package:repostaffs/services/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 import 'package:repostaffs/helpers/upload_file.dart';
+import 'package:repostaffs/services/auth.dart';
 
 class Profile extends StatefulWidget {
   final String email;

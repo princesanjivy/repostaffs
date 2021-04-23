@@ -1,14 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/screens/home_page.dart';
-import 'package:repostaffs/screens/login.dart';
-import 'package:repostaffs/screens/profile_pic.dart';
-import 'package:repostaffs/screens/sign_up.dart';
 import 'package:provider/provider.dart';
+import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/screens/wrapper.dart';
 import 'package:repostaffs/services/auth.dart';
-import 'package:repostaffs/screens/Wrapper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
