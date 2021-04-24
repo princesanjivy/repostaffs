@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "901356527956",
+    "project_id": "repostaffs",
+    "storage_bucket": "repostaffs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901356527956:android:9fa5da0f097ef43087a8c1",
+        "android_client_info": {
+          "package_name": "com.princeappstudio.repostaffs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901356527956-huh0bd7imd6a8s9358g8e4n4ap7jlpsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGXwSGN8Mcftx9t1letoYeAS286QdyQ3I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901356527956-huh0bd7imd6a8s9358g8e4n4ap7jlpsh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
