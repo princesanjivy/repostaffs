@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/generate_excel.dart';
 import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/add_edit_service.dart';
 import 'package:repostaffs/screens/attendance_admin.dart';
@@ -194,7 +195,10 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                             color: Colors.transparent,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(15),
-                              onTap: () {}, //Add Navigator to the Gallery Page
+                              onTap: () {
+                                // todo
+                                GenerateExcel(DateTime.now()).save();
+                              }, //Add Navigator to the Gallery Page
                               splashColor: WHITE,
                               radius: 300,
                               child: Container(
