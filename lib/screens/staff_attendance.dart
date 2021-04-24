@@ -111,12 +111,12 @@ class _StaffAttendanceState extends State<StaffAttendance> {
         child: status == 0
             ? MyText(
                 "Welcome",
-                color: Colors.white,
+                color: WHITE,
               )
             : status == 1
                 ? MyText(
                     "You already scanned!",
-                    color: Colors.white,
+                    color: WHITE,
                   )
                 : _buildQrView(context),
       ),

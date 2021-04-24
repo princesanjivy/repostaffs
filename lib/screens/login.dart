@@ -33,14 +33,14 @@ class _LoginState extends State<Login> {
                 children: [
                   CircularProgressIndicator(
                     backgroundColor: PRIMARY,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(WHITE),
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
                   MyText(
                     'Signing in , Please Wait',
-                    color: Colors.white,
+                    color: WHITE,
                     fontWeight: 'Medium',
                     size: 16,
                   )
@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
                             TextSpan(
                               text: 'Sign in to',
                               style: GoogleFonts.poppins(
-                                color: Colors.white,
+                                color: WHITE,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
                             TextSpan(
                               text: ' Repostaffs',
                               style: GoogleFonts.poppins(
-                                color: Colors.white,
+                                color: WHITE,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -97,13 +97,13 @@ class _LoginState extends State<Login> {
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.mail_rounded,
-                                  color: Colors.white,
+                                  color: WHITE,
                                 ),
                                 labelText: 'Email',
                                 labelStyle: GoogleFonts.poppins(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white,
+                                  color: WHITE,
                                   letterSpacing: 1.0,
                                 ),
                                 border: OutlineInputBorder(
@@ -114,7 +114,7 @@ class _LoginState extends State<Login> {
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
-                                    color: Colors.white,
+                                    color: WHITE,
                                   ),
                                 ),
                                 hintText: 'Enter your Email ID',
@@ -138,12 +138,12 @@ class _LoginState extends State<Login> {
                               style: GoogleFonts.poppins(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.w300,
-                                color: Colors.white,
+                                color: WHITE,
                                 letterSpacing: 1.0,
                               ),
                               controller: _email,
                               autocorrect: true,
-                              cursorColor: Colors.white,
+                              cursorColor: WHITE,
                             ),
                             SizedBox(
                               height: 35.0,
@@ -153,13 +153,13 @@ class _LoginState extends State<Login> {
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.lock_rounded,
-                                  color: Colors.white,
+                                  color: WHITE,
                                 ),
                                 labelText: 'Password',
                                 labelStyle: GoogleFonts.poppins(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white,
+                                  color: WHITE,
                                   letterSpacing: 1.0,
                                 ),
                                 border: OutlineInputBorder(
@@ -170,7 +170,7 @@ class _LoginState extends State<Login> {
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
-                                    color: Colors.white,
+                                    color: WHITE,
                                   ),
                                 ),
                                 hintText: 'Enter your Password',
@@ -184,7 +184,7 @@ class _LoginState extends State<Login> {
                               style: GoogleFonts.poppins(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.w300,
-                                color: Colors.white,
+                                color: WHITE,
                                 letterSpacing: 1.0,
                               ),
                               autovalidateMode:
@@ -194,7 +194,7 @@ class _LoginState extends State<Login> {
                                   errorText: 'This field cannot be left empty'),
                               autocorrect: true,
                               autofocus: false,
-                              cursorColor: Colors.white,
+                              cursorColor: WHITE,
                             ),
                             SizedBox(
                               height: 55.0,
@@ -216,7 +216,7 @@ class _LoginState extends State<Login> {
                                   if (result == null) {
                                     await Fluttertoast.showToast(
                                       msg: 'Invalid Email/Password',
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: WHITE,
                                       textColor: PRIMARY,
                                     );
                                   }
@@ -237,7 +237,7 @@ class _LoginState extends State<Login> {
                               ),
                               child: MyText(
                                 'Sign in',
-                                color: Colors.white,
+                                color: WHITE,
                                 fontWeight: 'Light',
                                 size: 18,
                               ),
@@ -250,7 +250,7 @@ class _LoginState extends State<Login> {
                               children: [
                                 MyText(
                                   'Don\'t have an account? ',
-                                  color: Colors.white,
+                                  color: WHITE,
                                   fontWeight: 'Medium',
                                   size: 16,
                                 ),
@@ -265,7 +265,7 @@ class _LoginState extends State<Login> {
                                   }, //Register
                                   child: MyText(
                                     'Sign Up.',
-                                    color: Colors.white,
+                                    color: WHITE,
                                     fontWeight: 'SemiBold',
                                     size: 20,
                                   ),

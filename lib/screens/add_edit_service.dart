@@ -35,7 +35,7 @@ class _AddEditServiceState extends State<AddEditService> {
                       ? Center(
                           child: MyText(
                             "No data found!",
-                            color: Colors.white,
+                            color: WHITE,
                             fontWeight: "Light",
                           ),
                         )
@@ -138,7 +138,7 @@ class _AddEditServiceState extends State<AddEditService> {
               ),
               child: MyText(
                 'Add new service',
-                color: Colors.white,
+                color: WHITE,
                 fontWeight: 'Light',
                 size: 18,
               ),

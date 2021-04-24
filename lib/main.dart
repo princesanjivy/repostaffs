@@ -35,16 +35,16 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         theme: ThemeData(
           iconTheme: IconThemeData(
-            color: Colors.white,
+            color: WHITE,
           ),
-          buttonColor: Colors.white,
+          buttonColor: WHITE,
 
           // textTheme: GoogleFonts.poppinsTextTheme().apply(
-          //   bodyColor: Colors.white,
+          //   bodyColor: WHITE,
           // ),
 
           // textTheme: GoogleFonts.poppinsTextTheme().apply(
-          //   bodyColor: Colors.white,
+          //   bodyColor: WHITE,
           // ),
           primaryColor: PRIMARY,
           canvasColor: SECONDARY,

@@ -35,7 +35,7 @@ class _AttendancePreviewState extends State<AttendancePreview> {
               ? Center(
                   child: MyText(
                     "No data found!",
-                    color: Colors.white,
+                    color: WHITE,
                     fontWeight: "Light",
                   ),
                 )
@@ -73,7 +73,7 @@ class _AttendancePreviewState extends State<AttendancePreview> {
                                         userSnapshot.data.get("name"),
                                         size: 16,
                                         fontWeight: "Light",
-                                        color: Colors.white,
+                                        color: WHITE,
                                       ),
                                     ],
                                   ),
@@ -96,11 +96,11 @@ class _AttendancePreviewState extends State<AttendancePreview> {
                 data: ThemeData.dark().copyWith(
                   colorScheme: ColorScheme.dark(
                     primary: PRIMARY,
-                    onPrimary: Colors.white,
+                    onPrimary: WHITE,
                     surface: PRIMARY,
                     // onSurface: PRIMARY,
                   ),
-                  // dialogBackgroundColor: Colors.white,
+                  // dialogBackgroundColor: WHITE,
                 ),
                 child: child,
               );

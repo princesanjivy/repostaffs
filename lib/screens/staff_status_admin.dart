@@ -10,13 +10,15 @@ class StaffStatusAdmin extends StatefulWidget {
 }
 
 class _StaffStatusAdminState extends State<StaffStatusAdmin> {
+  DateTime pickedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar("Staff's Status"),
       body: ListView.builder(
         // padding: EdgeInsets.all(16),
-        itemCount: 10,
+        itemCount: 5,
         itemBuilder: (context, index) {
           return InkWell(
             child: Padding(
@@ -39,7 +41,7 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                     "Prince",
                     size: 16,
                     fontWeight: "Light",
-                    color: Colors.white,
+                    color: WHITE,
                   ),
                 ],
               ),
@@ -57,10 +59,10 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDatePicker(
+        onPressed: () async {
+          await showDatePicker(
             context: context,
-            initialDate: DateTime.now(),
+            initialDate: pickedDate,
             firstDate: DateTime(1900),
             lastDate: DateTime(2030),
             confirmText: "SET",
@@ -69,16 +71,21 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                 data: ThemeData.dark().copyWith(
                   colorScheme: ColorScheme.dark(
                     primary: PRIMARY,
-                    onPrimary: Colors.white,
+                    onPrimary: WHITE,
                     surface: PRIMARY,
                     // onSurface: PRIMARY,
                   ),
-                  // dialogBackgroundColor: Colors.white,
+                  // dialogBackgroundColor: WHITE,
                 ),
                 child: child,
               );
             },
-          );
+          ).then((value) {
+            if (value != null)
+              setState(() {
+                pickedDate = value;
+              });
+          });
         },
         child: Icon(
           Icons.lock_clock,

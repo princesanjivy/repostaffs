@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:repostaffs/components/my_text.dart';
+import 'package:repostaffs/constants.dart';
 
 class MyRowText extends StatelessWidget {
   final String heading;
@@ -23,14 +24,14 @@ class MyRowText extends StatelessWidget {
             child: MyText(
               heading,
               size: 18,
-              color: Colors.white,
+              color: WHITE,
             ),
           ),
           // Expanded(
           //   child: MyText(
           //     " : ",
           //     size: 18,
-          //     color: Colors.white,
+          //     color: WHITE,
           //   ),
           // ),
           Expanded(
@@ -38,7 +39,7 @@ class MyRowText extends StatelessWidget {
               text,
               size: 18,
               fontWeight: "Light",
-              color: Colors.white,
+              color: WHITE,
             ),
           ),
         ],

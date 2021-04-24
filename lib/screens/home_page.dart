@@ -44,14 +44,14 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     CircularProgressIndicator(
                       backgroundColor: PRIMARY,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(WHITE),
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     MyText(
                       'Logging out , Please Wait',
-                      color: Colors.white,
+                      color: WHITE,
                       fontWeight: 'Medium',
                       size: 16,
                     )
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                           height: 200,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.white,
+                              color: WHITE,
                               width: 3,
                             ),
                             image: DecorationImage(
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                               borderRadius: BorderRadius.circular(15),
-                              splashColor: Colors.white,
+                              splashColor: WHITE,
                               radius: 300,
                               child: Container(
                                 height: 140,
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                                         padding: EdgeInsets.only(top: 10.0),
                                         child: MyText(
                                           'Attendance',
-                                          color: Colors.white,
+                                          color: WHITE,
                                           fontWeight: 'Medium',
                                           size: 15,
                                         ),
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                               borderRadius: BorderRadius.circular(15),
                               onTap:
                                   () {}, //add navigator to the Service Status Upload Page
-                              splashColor: Colors.white,
+                              splashColor: WHITE,
                               radius: 300,
                               child: Container(
                                 height: 140,
@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                                               children: [
                                                 MyText(
                                                   'Service',
-                                                  color: Colors.white,
+                                                  color: WHITE,
                                                   fontWeight: 'Medium',
                                                   size: 15,
                                                 )
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                                               children: [
                                                 MyText(
                                                   'Status',
-                                                  color: Colors.white,
+                                                  color: WHITE,
                                                   fontWeight: 'Medium',
                                                   size: 15,
                                                 )
@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(15),
                                 onTap:
                                     () {}, //Add Navigator to the Gallery Page
-                                splashColor: Colors.white,
+                                splashColor: WHITE,
                                 radius: 300,
                                 child: Container(
                                   height: 140,
@@ -250,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Icon(
                                           Icons.photo_library_rounded,
-                                          color: Colors.white,
+                                          color: WHITE,
                                           size: 25.0,
                                         ),
                                         Padding(
@@ -258,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                                               const EdgeInsets.only(top: 10.0),
                                           child: MyText(
                                             'Gallery',
-                                            color: Colors.white,
+                                            color: WHITE,
                                             fontWeight: 'Medium',
                                             size: 15,
                                           ),
@@ -291,14 +291,14 @@ class _HomePageState extends State<HomePage> {
 
                                   Fluttertoast.showToast(
                                     msg: 'Signed out Successfully',
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: WHITE,
                                     textColor: PRIMARY,
                                   );
                                   context
                                       .read<AuthenticationProvider>()
                                       .signOut();
                                 },
-                                splashColor: Colors.white,
+                                splashColor: WHITE,
                                 radius: 300,
                                 child: Container(
                                   height: 140,
@@ -313,7 +313,7 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Icon(
                                           Icons.logout,
-                                          color: Colors.white,
+                                          color: WHITE,
                                           size: 25.0,
                                         ),
                                         Padding(
@@ -321,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                                               const EdgeInsets.only(top: 10.0),
                                           child: MyText(
                                             'Logout',
-                                            color: Colors.white,
+                                            color: WHITE,
                                             fontWeight: 'Medium',
                                             size: 15,
                                           ),

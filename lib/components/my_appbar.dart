@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:repostaffs/components/my_text.dart';
+import 'package:repostaffs/constants.dart';
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
@@ -20,6 +21,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
         title,
         fontWeight: "Medium",
         size: 26,
+        color: WHITE,
       ),
       backgroundColor: Colors.transparent,
       elevation: 0,

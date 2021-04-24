@@ -34,14 +34,14 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                   children: [
                     CircularProgressIndicator(
                       backgroundColor: PRIMARY,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(WHITE),
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     MyText(
                       'Logging out , Please Wait',
-                      color: Colors.white,
+                      color: WHITE,
                       fontWeight: 'Medium',
                       size: 16,
                     )
@@ -72,7 +72,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                               );
                             },
                             borderRadius: BorderRadius.circular(15),
-                            splashColor: Colors.white,
+                            splashColor: WHITE,
                             radius: 300,
                             child: Container(
                               height: 140,
@@ -92,7 +92,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                       padding: EdgeInsets.only(top: 10.0),
                                       child: MyText(
                                         'Attendance',
-                                        color: Colors.white,
+                                        color: WHITE,
                                         fontWeight: 'Medium',
                                         size: 15,
                                       ),
@@ -124,7 +124,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                 ),
                               );
                             },
-                            splashColor: Colors.white,
+                            splashColor: WHITE,
                             radius: 300,
                             child: Container(
                               height: 140,
@@ -150,7 +150,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                             children: [
                                               MyText(
                                                 'Service',
-                                                color: Colors.white,
+                                                color: WHITE,
                                                 fontWeight: 'Medium',
                                                 size: 15,
                                               )
@@ -162,7 +162,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                             children: [
                                               MyText(
                                                 'Status',
-                                                color: Colors.white,
+                                                color: WHITE,
                                                 fontWeight: 'Medium',
                                                 size: 15,
                                               )
@@ -195,7 +195,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(15),
                               onTap: () {}, //Add Navigator to the Gallery Page
-                              splashColor: Colors.white,
+                              splashColor: WHITE,
                               radius: 300,
                               child: Container(
                                 height: 140,
@@ -209,7 +209,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                     children: [
                                       Icon(
                                         Icons.photo_library_rounded,
-                                        color: Colors.white,
+                                        color: WHITE,
                                         size: 25.0,
                                       ),
                                       Padding(
@@ -217,7 +217,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                             const EdgeInsets.only(top: 10.0),
                                         child: MyText(
                                           'Gallery',
-                                          color: Colors.white,
+                                          color: WHITE,
                                           fontWeight: 'Medium',
                                           size: 15,
                                         ),
@@ -250,14 +250,14 @@ class _HomePageAdminState extends State<HomePageAdmin> {
 
                                 Fluttertoast.showToast(
                                   msg: 'Signed out Successfully',
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: WHITE,
                                   textColor: PRIMARY,
                                 );
                                 context
                                     .read<AuthenticationProvider>()
                                     .signOut();
                               },
-                              splashColor: Colors.white,
+                              splashColor: WHITE,
                               radius: 300,
                               child: Container(
                                 height: 140,
@@ -271,7 +271,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                     children: [
                                       Icon(
                                         Icons.logout,
-                                        color: Colors.white,
+                                        color: WHITE,
                                         size: 25.0,
                                       ),
                                       Padding(
@@ -279,7 +279,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                             const EdgeInsets.only(top: 10.0),
                                         child: MyText(
                                           'Logout',
-                                          color: Colors.white,
+                                          color: WHITE,
                                           fontWeight: 'Medium',
                                           size: 15,
                                         ),

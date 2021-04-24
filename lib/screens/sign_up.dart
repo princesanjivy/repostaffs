@@ -31,7 +31,7 @@ class _SignUpState extends State<SignUp> {
                 padding: const EdgeInsets.only(top: 70.0),
                 child: MyText(
                   'Create an account',
-                  color: Colors.white,
+                  color: WHITE,
                   fontWeight: 'Medium',
                   size: 24.0,
                 ),
@@ -50,13 +50,13 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.person,
-                            color: Colors.white,
+                            color: WHITE,
                           ),
                           labelText: 'Name',
                           labelStyle: GoogleFonts.poppins(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                            color: WHITE,
                             letterSpacing: 1.0,
                           ),
                           border: OutlineInputBorder(
@@ -67,7 +67,7 @@ class _SignUpState extends State<SignUp> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: WHITE,
                             ),
                           ),
                           hintText: 'Enter your Email ID',
@@ -81,7 +81,7 @@ class _SignUpState extends State<SignUp> {
                         style: GoogleFonts.poppins(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white,
+                          color: WHITE,
                           letterSpacing: 1.0,
                         ),
                         controller: _name,
@@ -89,7 +89,7 @@ class _SignUpState extends State<SignUp> {
                         validator: RequiredValidator(
                             errorText: 'This Field cannot be left empty'),
                         autocorrect: true,
-                        cursorColor: Colors.white,
+                        cursorColor: WHITE,
                       ),
                       SizedBox(
                         height: 35.0,
@@ -98,13 +98,13 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.call,
-                            color: Colors.white,
+                            color: WHITE,
                           ),
                           labelText: 'Mobile Number',
                           labelStyle: GoogleFonts.poppins(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                            color: WHITE,
                             letterSpacing: 1.0,
                           ),
                           border: OutlineInputBorder(
@@ -115,7 +115,7 @@ class _SignUpState extends State<SignUp> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: WHITE,
                             ),
                           ),
                           hintText: 'Enter your Mobile Number',
@@ -129,7 +129,7 @@ class _SignUpState extends State<SignUp> {
                         style: GoogleFonts.poppins(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white,
+                          color: WHITE,
                           letterSpacing: 1.0,
                         ),
                         controller: _mobno,
@@ -144,7 +144,7 @@ class _SignUpState extends State<SignUp> {
                               errorText: 'Only 10 numbers are allowed'),
                         ]),
                         autocorrect: true,
-                        cursorColor: Colors.white,
+                        cursorColor: WHITE,
                       ),
                       SizedBox(
                         height: 35.0,
@@ -153,13 +153,13 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.email_rounded,
-                            color: Colors.white,
+                            color: WHITE,
                           ),
                           labelText: 'Email',
                           labelStyle: GoogleFonts.poppins(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                            color: WHITE,
                             letterSpacing: 1.0,
                           ),
                           border: OutlineInputBorder(
@@ -170,7 +170,7 @@ class _SignUpState extends State<SignUp> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: WHITE,
                             ),
                           ),
                           hintText: 'Enter your Email ID',
@@ -184,7 +184,7 @@ class _SignUpState extends State<SignUp> {
                         style: GoogleFonts.poppins(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white,
+                          color: WHITE,
                           letterSpacing: 1.0,
                         ),
                         controller: _email,
@@ -195,7 +195,7 @@ class _SignUpState extends State<SignUp> {
                           EmailValidator(errorText: 'Invalid Mail ID'),
                         ]),
                         autocorrect: true,
-                        cursorColor: Colors.white,
+                        cursorColor: WHITE,
                       ),
                       SizedBox(
                         height: 35.0,
@@ -205,13 +205,13 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.lock_rounded,
-                            color: Colors.white,
+                            color: WHITE,
                           ),
                           labelText: 'Password',
                           labelStyle: GoogleFonts.poppins(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                            color: WHITE,
                             letterSpacing: 1.0,
                           ),
                           border: OutlineInputBorder(
@@ -222,7 +222,7 @@ class _SignUpState extends State<SignUp> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: WHITE,
                             ),
                           ),
                           hintText: 'Enter your Password',
@@ -236,7 +236,7 @@ class _SignUpState extends State<SignUp> {
                         style: GoogleFonts.poppins(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white,
+                          color: WHITE,
                           letterSpacing: 1.0,
                         ),
                         controller: _password,
@@ -248,7 +248,7 @@ class _SignUpState extends State<SignUp> {
                           return null;
                         },
                         autocorrect: true,
-                        cursorColor: Colors.white,
+                        cursorColor: WHITE,
                       ),
                       SizedBox(
                         height: 35.0,
@@ -258,13 +258,13 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.lock_rounded,
-                            color: Colors.white,
+                            color: WHITE,
                           ),
                           labelText: 'Confirm Password',
                           labelStyle: GoogleFonts.poppins(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                            color: WHITE,
                             letterSpacing: 1.0,
                           ),
                           border: OutlineInputBorder(
@@ -275,7 +275,7 @@ class _SignUpState extends State<SignUp> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: WHITE,
                             ),
                           ),
                           hintText: 'Enter your Password',
@@ -289,7 +289,7 @@ class _SignUpState extends State<SignUp> {
                         style: GoogleFonts.poppins(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white,
+                          color: WHITE,
                           letterSpacing: 1.0,
                         ),
                         controller: _conpassword,
@@ -303,7 +303,7 @@ class _SignUpState extends State<SignUp> {
                           return null;
                         },
                         autocorrect: true,
-                        cursorColor: Colors.white,
+                        cursorColor: WHITE,
                       ),
                       SizedBox(
                         height: 35.0,
@@ -311,7 +311,7 @@ class _SignUpState extends State<SignUp> {
                       ElevatedButton(
                         child: MyText(
                           'Sign Up',
-                          color: Colors.white,
+                          color: WHITE,
                           fontWeight: 'Light',
                           size: 18,
                         ),
@@ -353,7 +353,7 @@ class _SignUpState extends State<SignUp> {
                         children: [
                           MyText(
                             'Don\'t have an account? ',
-                            color: Colors.white,
+                            color: WHITE,
                             fontWeight: 'Medium',
                             size: 16,
                           ),
@@ -363,7 +363,7 @@ class _SignUpState extends State<SignUp> {
                             }, //Register
                             child: MyText(
                               'Log In.',
-                              color: Colors.white,
+                              color: WHITE,
                               fontWeight: 'SemiBold',
                               size: 20,
                             ),

@@ -54,8 +54,8 @@ class _ProfileState extends State<Profile> {
           compressFormat: ImageCompressFormat.jpg,
           androidUiSettings: AndroidUiSettings(
             activeControlsWidgetColor: Colors.purple[800],
-            toolbarWidgetColor: Colors.white,
-            cropGridColor: Colors.white,
+            toolbarWidgetColor: WHITE,
+            cropGridColor: WHITE,
             toolbarColor: SECONDARY,
             toolbarTitle: "Adjust your Image",
             statusBarColor: SECONDARY,
@@ -83,20 +83,20 @@ class _ProfileState extends State<Profile> {
                 children: [
                   CircularProgressIndicator(
                     backgroundColor: PRIMARY,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(WHITE),
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
                   MyText(
                     'Creating your account and Signing in,',
-                    color: Colors.white,
+                    color: WHITE,
                     fontWeight: 'Medium',
                     size: 16,
                   ),
                   MyText(
                     'Please Wait',
-                    color: Colors.white,
+                    color: WHITE,
                     fontWeight: 'Medium',
                     size: 16,
                   )
@@ -118,7 +118,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       MyText(
                         'Upload an Image for\nyour Profile',
-                        color: Colors.white,
+                        color: WHITE,
                         fontWeight: 'Medium',
                         size: 24.0,
                       ),
@@ -152,7 +152,7 @@ class _ProfileState extends State<Profile> {
                                       topLeft: Radius.circular(40.0),
                                       topRight: Radius.circular(40.0),
                                     ),
-                                    color: Colors.white,
+                                    color: WHITE,
                                   ),
                                   height: 150,
                                   width: double.infinity,
@@ -204,7 +204,7 @@ class _ProfileState extends State<Profile> {
                           icon: Icon(
                             Icons.camera_alt,
                           ),
-                          color: Colors.white,
+                          color: WHITE,
                         ),
                       ),
                     )
@@ -215,7 +215,7 @@ class _ProfileState extends State<Profile> {
                   ElevatedButton(
                     child: MyText(
                       'Done',
-                      color: Colors.white,
+                      color: WHITE,
                       fontWeight: 'Light',
                       size: 18,
                     ),
@@ -223,7 +223,7 @@ class _ProfileState extends State<Profile> {
                       if (_selectedFile == null) {
                         Fluttertoast.showToast(
                           msg: 'Please Upload an Image',
-                          backgroundColor: Colors.white,
+                          backgroundColor: WHITE,
                           textColor: PRIMARY,
                         );
                       } else {
@@ -240,7 +240,7 @@ class _ProfileState extends State<Profile> {
                             Fluttertoast.showToast(
                                 msg:
                                     'Failed to create account, Please enter a valid email address',
-                                backgroundColor: Colors.white,
+                                backgroundColor: WHITE,
                                 textColor: PRIMARY);
                             Navigator.pop(context);
                           } else {
@@ -264,7 +264,7 @@ class _ProfileState extends State<Profile> {
                                 ).then((value) {
                                   Fluttertoast.showToast(
                                       msg: 'Account Created Successfully!',
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: WHITE,
                                       textColor: PRIMARY);
 
                                   Navigator.pop(context);
