@@ -215,7 +215,7 @@ class _LoginState extends State<Login> {
                                   });
                                   if (result == null) {
                                     await Fluttertoast.showToast(
-                                      msg: 'Invalid Mail/Password',
+                                      msg: 'Invalid Email/Password',
                                       backgroundColor: Colors.white,
                                       textColor: PRIMARY,
                                     );
