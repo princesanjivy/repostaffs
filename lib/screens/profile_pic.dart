@@ -261,18 +261,19 @@ class _ProfileState extends State<Profile> {
                                     'phoneNo': widget.mobNo,
                                     'imageUrl': imageUrl
                                   },
-                                );
+                                ).then((value) {
+                                  Fluttertoast.showToast(
+                                      msg: 'Account Created Successfully!',
+                                      backgroundColor: Colors.white,
+                                      textColor: PRIMARY);
+
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                });
                               },
                             );
-                            Fluttertoast.showToast(
-                                msg: 'Account Created Successfully!',
-                                backgroundColor: Colors.white,
-                                textColor: PRIMARY);
 
                             setState(() {
-                              int count = 0;
-                              Navigator.of(context)
-                                  .popUntil((_) => count++ >= 2);
                               _loading = false;
                             });
                           }
