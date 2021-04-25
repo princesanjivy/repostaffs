@@ -1,27 +1,42 @@
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:permission_handler/permission_handler.dart';
+import 'package:excel/excel.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 class GenerateExcel {
   final DateTime dateTime;
-
   GenerateExcel(this.dateTime);
 
+  static const platform =
+      const MethodChannel('com.princeappstudio.repostaffs/save');
+
   save() async {
-    PermissionStatus status = await Permission.storage.status;
-    if (status.isGranted) {
-      final folderName = "Repo";
-      final path = Directory("storage/emulated/0/$folderName");
-      if ((await path.exists())) {
-        // TODO:
-        print("exist");
-      } else {
-        // TODO:
-        print("not exist");
-        path.create();
-      }
-    } else {
-      await Permission.storage.request();
+    var excel = Excel.createExcel();
+    excel.insertRowIterables("Sheet1", ["Hair cut", "Beard trim"], 0);
+
+    Uint8List bytes;
+
+    String dir = (await getTemporaryDirectory()).path;
+    File temp = new File('$dir/temp.xlsx');
+
+    await temp.writeAsBytes(excel.save());
+    bytes = temp.readAsBytesSync();
+    temp.delete();
+
+    try {
+      await platform.invokeMethod(
+        'excel',
+        {
+          "bytes": bytes,
+          "name": DateTime.now().millisecondsSinceEpoch.toString(),
+        },
+      ).then((value) {
+        print(value);
+      });
+    } on PlatformException catch (e) {
+      print(e.message);
     }
   }
 }
