@@ -15,6 +15,18 @@ class GenerateExcel {
   save() async {
     var excel = Excel.createExcel();
     excel.insertRowIterables("Sheet1", ["Hair cut", "Beard trim"], 0);
+    excel.updateCell(
+      "Sheet1",
+      CellIndex.indexByString("A2"),
+      "Sanjivy",
+      cellStyle: CellStyle(backgroundColorHex: "#C6EFCE"),
+    );
+    excel.updateCell(
+      "Sheet1",
+      CellIndex.indexByString("B2"),
+      "Hendrix",
+      cellStyle: CellStyle(backgroundColorHex: "#C6E00E"),
+    );
 
     Uint8List bytes;
 
