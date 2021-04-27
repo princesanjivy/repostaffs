@@ -21,7 +21,7 @@ class GenerateExcel {
       "Sanjivy",
       cellStyle: CellStyle(backgroundColorHex: "#C6EFCE"),
     );
-    excel.updateCell(
+    excel.updateCell( 
       "Sheet1",
       CellIndex.indexByString("B2"),
       "Hendrix",
