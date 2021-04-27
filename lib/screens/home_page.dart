@@ -10,6 +10,7 @@ import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
+import 'package:repostaffs/screens/upload_status.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,11 +24,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // final firebaseUser = context.watch<User>();
-    List imageList = _photoDir
-        .listSync()
-        .map((item) => item.path)
-        .where((item) => item.endsWith(".jpg"))
-        .toList(growable: false);
+    List Imagelist = [
+      "https://images.unsplash.com/photo-1619183763636-f6a55df91a15?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1619183763636-f6a55df91a15?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
+    ];
 
     return WillPopScope(
       onWillPop: () {
@@ -67,9 +67,8 @@ class _HomePageState extends State<HomePage> {
                       height: 30,
                     ),
                     CarouselSlider.builder(
-                      itemCount: 5,
+                      itemCount: Imagelist.length,
                       itemBuilder: (context, index, image) {
-                        File file = new File(imageList[index]);
                         return Container(
                           width: 300,
                           height: 200,
@@ -79,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                               width: 3,
                             ),
                             image: DecorationImage(
-                              image: FileImage(file),
+                              image: NetworkImage(Imagelist[index]),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(
@@ -160,8 +159,13 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.transparent,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(15),
-                              onTap:
-                                  () {}, //add navigator to the Service Status Upload Page
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UploadStatus()),
+                                );
+                              }, //add navigator to the Service Status Upload Page
                               splashColor: WHITE,
                               radius: 300,
                               child: Container(
