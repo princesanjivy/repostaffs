@@ -16,8 +16,7 @@ class Wrapper extends StatelessWidget {
         return HomePageAdmin();
       else
         return HomePage();
-    } else {
-      return UploadStatus();
-    }
+    } else
+      return Login();
   }
 }
