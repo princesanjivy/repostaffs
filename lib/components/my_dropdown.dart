@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:repostaffs/screens/upload_status.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class MyDropDown extends StatefulWidget {
-  @override
-  _MyDropDownState createState() => _MyDropDownState();
-  final List services;
-  MyDropDown({this.services});
-}
-
-class _MyDropDownState extends State<MyDropDown> {
+class MyDropDown extends StatelessWidget {
   String choosenValue;
+
   @override
   Widget build(BuildContext context) {
+    List t = ["A", "B", "C"]; //change this get from params
     return Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       width: 225,
@@ -22,43 +16,45 @@ class _MyDropDownState extends State<MyDropDown> {
         color: PRIMARY,
         borderRadius: BorderRadius.circular(15),
       ),
-      child: DropdownButton(
-        underline: SizedBox(),
-        icon: Icon(
-          Icons.arrow_drop_down_circle_sharp,
-        ),
-        isExpanded: true,
-        hint: MyText(
-          'Select Service',
-          fontWeight: 'MEDIUM',
-          size: 18,
-          color: WHITE,
-        ),
-        value: choosenValue,
-        onChanged: (service) {
-          setState(() {
-            choosenValue = service;
-          });
-        },
-        style: GoogleFonts.poppins(
-          fontSize: 18,
-          color: WHITE,
-        ),
-        iconEnabledColor: WHITE,
-        focusColor: WHITE,
-        items: widget.services
-            .map(
-              (service) => DropdownMenuItem(
-                value: service,
-                child: MyText(
-                  service,
-                  color: WHITE,
-                  fontWeight: 'MEDIUM',
+      child: StatefulBuilder(builder: (context, setState) {
+        return DropdownButton(
+          underline: SizedBox(),
+          icon: Icon(
+            Icons.arrow_drop_down_circle_sharp,
+          ),
+          isExpanded: true,
+          hint: MyText(
+            'Select Service',
+            fontWeight: 'MEDIUM',
+            size: 18,
+            color: WHITE,
+          ),
+          value: choosenValue,
+          onChanged: (service) {
+            setState(() {
+              choosenValue = service;
+            });
+          },
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            color: WHITE,
+          ),
+          iconEnabledColor: WHITE,
+          focusColor: WHITE,
+          items: t
+              .map(
+                (service) => DropdownMenuItem(
+                  value: service,
+                  child: MyText(
+                    service,
+                    color: WHITE,
+                    fontWeight: 'MEDIUM',
+                  ),
                 ),
-              ),
-            )
-            .toList(),
-      ),
+              )
+              .toList(),
+        );
+      }),
     );
   }
 }
