@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +18,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _loggingOut = false;
-  final Directory _photoDir = new Directory('/storage/emulated/0/Repostaffs');
 
   @override
   Widget build(BuildContext context) {
     // final firebaseUser = context.watch<User>();
-    List Imagelist = [
+    List imageList = [
       "https://images.unsplash.com/photo-1619183763636-f6a55df91a15?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
       "https://images.unsplash.com/photo-1619183763636-f6a55df91a15?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
     ];
@@ -67,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                       height: 30,
                     ),
                     CarouselSlider.builder(
-                      itemCount: Imagelist.length,
+                      itemCount: imageList.length,
                       itemBuilder: (context, index, image) {
                         return Container(
                           width: 300,
@@ -78,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                               width: 3,
                             ),
                             image: DecorationImage(
-                              image: NetworkImage(Imagelist[index]),
+                              image: NetworkImage(imageList[index]),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(
@@ -92,6 +90,7 @@ class _HomePageState extends State<HomePage> {
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enlargeCenterPage: true,
                         enableInfiniteScroll: true,
+                        autoPlayInterval: Duration(milliseconds: 2),
                       ),
                     ),
                     SizedBox(height: 100),
