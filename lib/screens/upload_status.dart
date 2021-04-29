@@ -16,7 +16,9 @@ class UploadStatus extends StatefulWidget {
 }
 
 class _UploadStatusState extends State<UploadStatus> {
-  List services = [];
+  List services = [
+    {'name': 'Select Service'}
+  ];
 
   TextEditingController _customerName = new TextEditingController();
   TextEditingController _mobNo = new TextEditingController();
@@ -39,14 +41,19 @@ class _UploadStatusState extends State<UploadStatus> {
       _inProcess = true;
     });
     await FirebaseFirestore.instance.collection("services").get().then((value) {
-      for (int i = 0; i < value.size; i++)
-        services.add(value.docs[i].get("name").toString());
+      for (int i = 0; i < value.size; i++) {
+        var serviceDetails = {
+          'name': value.docs[i].get("name").toString(),
+          'price': value.docs[i].get("price").toString()
+        };
+        services.add(serviceDetails);
+      }
 
       // items.add(Text("Hello"));
       items.add(
         MyDropDown(
-            // services: services,
-            ),
+          services: services,
+        ),
       );
 
       setState(() {
@@ -96,8 +103,8 @@ class _UploadStatusState extends State<UploadStatus> {
             //     "Heyyy" + DateTime.now().microsecondsSinceEpoch.toString()));
             items.add(
               MyDropDown(
-                  // services: services,
-                  ),
+                services: services,
+              ),
             );
           });
         },
@@ -123,7 +130,7 @@ class _UploadStatusState extends State<UploadStatus> {
                         width: 225,
                         child: TextField(
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(15),
+                            contentPadding: EdgeInsets.all(13),
                             prefixIcon: Icon(
                               Icons.person,
                               color: WHITE,
@@ -173,7 +180,7 @@ class _UploadStatusState extends State<UploadStatus> {
                         width: 225,
                         child: TextField(
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(15),
+                            contentPadding: EdgeInsets.all(13),
                             prefixIcon: Icon(
                               Icons.call_rounded,
                               color: WHITE,
@@ -218,66 +225,44 @@ class _UploadStatusState extends State<UploadStatus> {
                     SizedBox(
                       height: 35.0,
                     ),
+                    Text(''),
+                    SizedBox(
+                      height: 20,
+                    ),
                     ListView.builder(
                       physics: ScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: items.length,
                       itemBuilder: (context, index) {
-                        return Row(
+                        return Column(
                           children: [
-                            items[index],
                             if (index != 0)
-                              IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: () {
-                                    setState(() {
-                                      items.removeAt(index);
-                                    });
-                                  }),
+                              SizedBox(
+                                height: 30.0,
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                items[index],
+                                Opacity(
+                                  opacity: index == 0 ? 0 : 1,
+                                  child: IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        setState(() {
+                                          items.removeAt(index);
+                                        });
+                                      }),
+                                ),
+                              ],
+                            ),
                           ],
                         );
                       },
                     ),
-                    // ListView.builder(
-                    //   physics: ScrollPhysics(),
-                    //   shrinkWrap: true,
-                    //   itemCount: count,
-                    //   itemBuilder: (context, index) => Center(
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: [
-                    //         Row(
-                    //           children: [
-                    //             // SizedBox(
-                    //             //   width: 64,
-                    //             // ),
-                    //             MyDropDown(
-                    //               services: services,
-                    //             ),
-                    //             index != 0
-                    //                 ? IconButton(
-                    //                     splashRadius: 20.0,
-                    //                     icon: Icon(
-                    //                       Icons.close,
-                    //                       color: WHITE,
-                    //                     ),
-                    //                     onPressed: () {
-                    //                       setState(() {
-                    //                         // if(index!=
-                    //                       });
-                    //                     },
-                    //                   )
-                    //                 : Container()
-                    //           ],
-                    //         ),
-                    //         SizedBox(
-                    //           height: 25,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    //
+                    SizedBox(
+                      height: 35,
+                    ),
                     Center(
                       child: ElevatedButton(
                         onPressed: () async {
