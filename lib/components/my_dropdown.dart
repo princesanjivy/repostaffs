@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
@@ -11,6 +9,9 @@ class MyDropDown extends StatelessWidget {
   String choosenValue = 'Select Service';
   String priceVal = 'None';
   bool notextField = false;
+
+  TextEditingController _priceCon = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,6 +34,7 @@ class MyDropDown extends StatelessWidget {
                     child: Container(
                       width: 225,
                       child: TextField(
+                        style: GoogleFonts.poppins(fontSize: 18, color: WHITE),
                         textAlign: TextAlign.right,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(9),
@@ -47,9 +49,10 @@ class MyDropDown extends StatelessWidget {
                           ),
                           border: InputBorder.none,
                         ),
+                        controller: _priceCon,
                       ),
                     ),
-                  )
+                  ),
                 ],
               )
             : DropdownButton(

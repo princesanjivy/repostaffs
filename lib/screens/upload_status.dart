@@ -22,6 +22,7 @@ class _UploadStatusState extends State<UploadStatus> {
 
   TextEditingController _customerName = new TextEditingController();
   TextEditingController _mobNo = new TextEditingController();
+
   int count = 1;
   String choosenValue;
   File _selectedFile;
@@ -225,10 +226,6 @@ class _UploadStatusState extends State<UploadStatus> {
                     SizedBox(
                       height: 35.0,
                     ),
-                    Text(''),
-                    SizedBox(
-                      height: 20,
-                    ),
                     ListView.builder(
                       physics: ScrollPhysics(),
                       shrinkWrap: true,
@@ -263,6 +260,15 @@ class _UploadStatusState extends State<UploadStatus> {
                     SizedBox(
                       height: 35,
                     ),
+                    if (_selectedFile != null)
+                      ListView.builder(
+                          physics: ScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: 2,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return Text('None');
+                          }),
                     Center(
                       child: ElevatedButton(
                         onPressed: () async {
