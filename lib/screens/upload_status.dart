@@ -23,9 +23,12 @@ class _UploadStatusState extends State<UploadStatus> {
   TextEditingController _customerName = new TextEditingController();
   TextEditingController _mobNo = new TextEditingController();
 
+  List fileImages = [];
   int count = 1;
   String choosenValue;
   File _selectedFile;
+  int photoLimit = 1;
+
   bool _inProcess = false;
 
   List items = [];
@@ -68,10 +71,10 @@ class _UploadStatusState extends State<UploadStatus> {
     if (image != null) {
       File cropped = await ImageCropper.cropImage(
           sourcePath: image.path,
-          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+          aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2),
           compressQuality: 100,
-          maxWidth: 700,
-          maxHeight: 700,
+          maxWidth: 300,
+          maxHeight: 300,
           compressFormat: ImageCompressFormat.jpg,
           androidUiSettings: AndroidUiSettings(
             activeControlsWidgetColor: Colors.purple[800],
@@ -260,46 +263,128 @@ class _UploadStatusState extends State<UploadStatus> {
                     SizedBox(
                       height: 35,
                     ),
-                    if (_selectedFile != null)
-                      ListView.builder(
-                          physics: ScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 2,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Text('None');
-                          }),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          getImage(ImageSource.camera);
-                        },
-                        style: ButtonStyle(
-                          // elevation: MaterialStateProperty.all<double>(15),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(19),
+                    if (fileImages.isNotEmpty)
+                      SizedBox(
+                        height: 125,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ListView.builder(
+                              physics: ScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: fileImages.length,
+                              itemBuilder: (context, index) => Center(
+                                child: Row(
+                                  children: [
+                                    Stack(children: [
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        color: SECONDARY,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: WHITE, width: 1),
+                                              image: DecorationImage(
+                                                image: FileImage(
+                                                    fileImages[index]),
+                                                fit: BoxFit.fill,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          width: 150,
+                                          height: 200,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 135,
+                                        child: Material(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          color: WHITE,
+                                          child: InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            radius: 50,
+                                            splashColor: SECONDARY,
+                                            onTap: () {
+                                              setState(() {
+                                                fileImages.removeAt(index);
+                                                photoLimit--;
+                                                print(fileImages);
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(40),
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.close,
+                                                  size: 10,
+                                                  color: PRIMARY,
+                                                ),
+                                              ),
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          minimumSize:
-                              MaterialStateProperty.all<Size>(Size(120, 55)),
-                          backgroundColor: MaterialStateProperty.all((PRIMARY)),
-                        ),
-                        child: MyText(
-                          'Add Photos',
-                          color: WHITE,
-                          fontWeight: 'Light',
-                          size: 18,
+                          ],
                         ),
                       ),
+                    SizedBox(
+                      height: 35,
                     ),
+                    if (photoLimit <= 2)
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await getImage(ImageSource.camera);
+                            setState(() {
+                              photoLimit++;
+                              fileImages.add(_selectedFile);
+                            });
+                            print(fileImages);
+                          },
+                          style: ButtonStyle(
+                            // elevation: MaterialStateProperty.all<double>(15),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(19),
+                              ),
+                            ),
+                            minimumSize:
+                                MaterialStateProperty.all<Size>(Size(120, 55)),
+                            backgroundColor:
+                                MaterialStateProperty.all((PRIMARY)),
+                          ),
+                          child: MyText(
+                            'Add Photos',
+                            color: WHITE,
+                            fontWeight: 'Light',
+                            size: 18,
+                          ),
+                        ),
+                      ),
                     SizedBox(
                       height: 30,
                     ),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () async {}, //firebase code to be added.
+                        onPressed: () async {
+                          print(fileImages);
+                        }, //firebase code to be added.
                         style: ButtonStyle(
                           // elevation: MaterialStateProperty.all<double>(15),
                           shape:
@@ -322,20 +407,6 @@ class _UploadStatusState extends State<UploadStatus> {
                     ),
                     SizedBox(
                       height: 30.0,
-                    ),
-                    Center(
-                      //Add Images preview list code.
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: _selectedFile == null
-                            ? Container()
-                            : Image.file(
-                                _selectedFile,
-                                fit: BoxFit.cover,
-                                width: 200,
-                                height: 200,
-                              ),
-                      ),
                     ),
                   ],
                 ),
