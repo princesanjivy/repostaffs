@@ -1,14 +1,19 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_dropdown.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/upload_file.dart';
+import 'package:repostaffs/screens/home_page.dart';
 
 class UploadStatus extends StatefulWidget {
   @override
@@ -28,6 +33,8 @@ class _UploadStatusState extends State<UploadStatus> {
   String choosenValue;
   File _selectedFile;
   int photoLimit = 1;
+  int stateIndex = 0;
+  bool uploading = false;
 
   bool _inProcess = false;
 
@@ -57,8 +64,10 @@ class _UploadStatusState extends State<UploadStatus> {
       items.add(
         MyDropDown(
           services: services,
+          stateIndexx: stateIndex,
         ),
       );
+      stateIndex++;
 
       setState(() {
         _inProcess = false;
@@ -66,33 +75,41 @@ class _UploadStatusState extends State<UploadStatus> {
     });
   }
 
-  getImage(ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
-    if (image != null) {
-      File cropped = await ImageCropper.cropImage(
-          sourcePath: image.path,
-          aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2),
-          compressQuality: 100,
-          maxWidth: 300,
-          maxHeight: 300,
-          compressFormat: ImageCompressFormat.jpg,
-          androidUiSettings: AndroidUiSettings(
-            activeControlsWidgetColor: Colors.purple[800],
-            toolbarWidgetColor: WHITE,
-            cropGridColor: WHITE,
-            toolbarColor: SECONDARY,
-            toolbarTitle: "Adjust your Image",
-            statusBarColor: SECONDARY,
-            backgroundColor: SECONDARY,
-          ));
-      this.setState(() {
-        _selectedFile = cropped;
-      });
-    }
+  Future<bool> getImage(ImageSource source) async {
+    bool isDone;
+    await ImagePicker.pickImage(source: source).then((image) async {
+      if (image != null) {
+        File cropped = await ImageCropper.cropImage(
+            sourcePath: image.path,
+            aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2),
+            compressQuality: 100,
+            maxWidth: 300,
+            maxHeight: 300,
+            compressFormat: ImageCompressFormat.jpg,
+            androidUiSettings: AndroidUiSettings(
+              activeControlsWidgetColor: Colors.purple[800],
+              toolbarWidgetColor: WHITE,
+              cropGridColor: WHITE,
+              toolbarColor: SECONDARY,
+              toolbarTitle: "Adjust your Image",
+              statusBarColor: SECONDARY,
+              backgroundColor: SECONDARY,
+            ));
+        this.setState(() {
+          _selectedFile = cropped;
+        });
+        isDone = true;
+      } else {
+        isDone = false;
+      }
+    });
+    return isDone;
   }
 
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -108,8 +125,10 @@ class _UploadStatusState extends State<UploadStatus> {
             items.add(
               MyDropDown(
                 services: services,
+                stateIndexx: stateIndex,
               ),
             );
+            stateIndex++;
           });
         },
         child: Icon(
@@ -121,7 +140,33 @@ class _UploadStatusState extends State<UploadStatus> {
       ),
       appBar: MyAppBar('Service Status'),
       body: _inProcess
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: uploading
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          backgroundColor: PRIMARY,
+                          valueColor: AlwaysStoppedAnimation<Color>(WHITE),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        MyText(
+                          'Updating Your Customer\'s Service Status',
+                          color: WHITE,
+                          fontWeight: 'Medium',
+                          size: 14,
+                        ),
+                        MyText(
+                          'Please Wait',
+                          color: WHITE,
+                          fontWeight: 'Medium',
+                          size: 14,
+                        )
+                      ],
+                    )
+                  : CircularProgressIndicator())
           : SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Padding(
@@ -250,7 +295,10 @@ class _UploadStatusState extends State<UploadStatus> {
                                       icon: Icon(Icons.close),
                                       onPressed: () {
                                         setState(() {
-                                          items.removeAt(index);
+                                          if (index != 0) items.removeAt(index);
+                                          if ((selectedServices.length - 1) >=
+                                              index)
+                                            selectedServices.removeAt(index);
                                         });
                                       }),
                                 ),
@@ -349,12 +397,14 @@ class _UploadStatusState extends State<UploadStatus> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                            await getImage(ImageSource.camera);
-                            setState(() {
-                              photoLimit++;
-                              fileImages.add(_selectedFile);
-                            });
-                            print(fileImages);
+                            bool val = await getImage(ImageSource.camera);
+                            if (val) {
+                              setState(() {
+                                photoLimit++;
+                                fileImages.add(_selectedFile);
+                              });
+                              print(fileImages);
+                            }
                           },
                           style: ButtonStyle(
                             // elevation: MaterialStateProperty.all<double>(15),
@@ -383,7 +433,56 @@ class _UploadStatusState extends State<UploadStatus> {
                     Center(
                       child: ElevatedButton(
                         onPressed: () async {
-                          print(fileImages);
+                          // print(selectedServices);
+                          // print(fileImages);
+                          print(_customerName.text);
+                          print(_mobNo.text);
+
+                          if (_customerName.text != '' && _mobNo.text != '') {
+                            setState(() {
+                              _inProcess = true;
+                              uploading = true;
+                            });
+
+                            final dateAndTime = DateTime.now();
+                            List customerNetImages = [];
+                            for (int i = 0; i < fileImages.length; i++) {
+                              customerNetImages.add(
+                                  await UploadImageToFireStore(
+                                          file: fileImages[i], path: 'userpic1')
+                                      .uploadAndGetUrl());
+                            }
+                            // print(customerNetImages);
+
+                            FirebaseFirestore firestore =
+                                FirebaseFirestore.instance;
+                            firestore
+                                .collection('status')
+                                .doc(firebaseUser.uid)
+                                .set({
+                              'uid': firebaseUser.uid,
+                              'customerName': _customerName.text,
+                              'customerPhoneNo': _mobNo.text,
+                              'services': selectedServices,
+                              'customerPhotos': customerNetImages,
+                              'timeStamp': dateAndTime
+                            }).then((value) {
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage());
+                              Fluttertoast.showToast(
+                                msg:
+                                    'Your Status has been successfully Updated',
+                                textColor: PRIMARY,
+                                backgroundColor: WHITE,
+                              );
+                            });
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: 'Please Provide the Customer details',
+                              textColor: PRIMARY,
+                              backgroundColor: WHITE,
+                            );
+                          }
                         }, //firebase code to be added.
                         style: ButtonStyle(
                           // elevation: MaterialStateProperty.all<double>(15),
@@ -413,9 +512,5 @@ class _UploadStatusState extends State<UploadStatus> {
               ),
             ),
     );
-  }
-
-  Widget temp(Widget d) {
-    return d;
   }
 }
