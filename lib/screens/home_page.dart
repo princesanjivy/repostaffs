@@ -90,7 +90,6 @@ class _HomePageState extends State<HomePage> {
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enlargeCenterPage: true,
                         enableInfiniteScroll: true,
-                        autoPlayInterval: Duration(milliseconds: 2),
                       ),
                     ),
                     SizedBox(height: 100),

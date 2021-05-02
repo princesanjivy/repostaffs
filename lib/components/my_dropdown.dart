@@ -1,16 +1,21 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 
+List selectedServices = [];
+
 class MyDropDown extends StatelessWidget {
   List services;
-  MyDropDown({this.services});
+  int stateIndexx;
+  MyDropDown({this.services, this.stateIndexx});
   String choosenValue = 'Select Service';
   String priceVal = 'None';
   bool notextField = false;
+  bool showHint = false;
+
+  TextEditingController _priceCon = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,23 +38,42 @@ class MyDropDown extends StatelessWidget {
                     child: Container(
                       width: 225,
                       child: TextField(
+                        style: GoogleFonts.poppins(fontSize: 18, color: WHITE),
                         textAlign: TextAlign.right,
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(9),
-                          hintText: priceVal,
+                          hintText: showHint ? priceVal : '',
                           hintStyle: GoogleFonts.poppins(
                             fontSize: 18,
                             color: WHITE,
                           ),
+                          contentPadding: EdgeInsets.all(9),
                           labelStyle: GoogleFonts.poppins(
                             color: WHITE,
                             fontSize: 18,
                           ),
                           border: InputBorder.none,
                         ),
+                        controller: _priceCon,
+                        onChanged: (myPrice) {
+                          // print(ind);
+                          if (myPrice.isNotEmpty)
+                            selectedServices[stateIndexx] = {
+                              'name': choosenValue,
+                              'price': myPrice
+                            };
+                          else if (myPrice.isEmpty) {
+                            setState(() {
+                              showHint = true;
+                            });
+                            selectedServices[stateIndexx] = {
+                              'name': choosenValue,
+                              'price': priceVal
+                            };
+                          }
+                        },
                       ),
                     ),
-                  )
+                  ),
                 ],
               )
             : DropdownButton(
@@ -65,20 +89,23 @@ class MyDropDown extends StatelessWidget {
                 //   color: WHITE,
                 // ),
                 value: 'Select Service',
+
                 onChanged: (service) {
+                  // print(ind);
                   if (service != 'Select Service') {
                     setState(() {
                       for (int i = 0; i < services.length; i++) {
                         if (service == services[i]['name']) {
                           priceVal = services[i]['price'];
                           choosenValue = services[i]['name'];
+                          _priceCon.text = priceVal;
                         }
                       }
                       notextField = true;
                     });
+                    selectedServices
+                        .add({'name': choosenValue, 'price': _priceCon.text});
                   }
-
-                  print(service);
                 },
                 style: GoogleFonts.poppins(
                   fontSize: 18,
