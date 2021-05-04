@@ -1,10 +1,13 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:repostaffs/components/my_dropdown.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/providers/auth.dart';
+import 'package:repostaffs/screens/internet_error_dialog.dart';
 import 'package:repostaffs/screens/wrapper.dart';
 
 void main() async {
@@ -20,6 +23,27 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _conResult = false;
+  StreamSubscription<ConnectivityResult> subscription;
+  @override
+  void initState() {
+    super.initState();
+    var connectivity = new Connectivity();
+    subscription =
+        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      var connectivityResult = result.toString();
+      if (connectivityResult == 'ConnectivityResult.mobile' ||
+          connectivityResult == 'ConnectivityResult.wifi')
+        setState(() {
+          _conResult = true;
+        });
+      else
+        setState(() {
+          _conResult = false;
+        });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -34,25 +58,24 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       child: MaterialApp(
-        theme: ThemeData(
-          iconTheme: IconThemeData(
-            color: WHITE,
+          theme: ThemeData(
+            iconTheme: IconThemeData(
+              color: WHITE,
+            ),
+            buttonColor: WHITE,
+
+            // textTheme: GoogleFonts.poppinsTextTheme().apply(
+            //   bodyColor: WHITE,
+            // ),
+
+            // textTheme: GoogleFonts.poppinsTextTheme().apply(
+            //   bodyColor: WHITE,
+            // ),
+            primaryColor: PRIMARY,
+            canvasColor: SECONDARY,
+            accentColor: PRIMARY,
           ),
-          buttonColor: WHITE,
-
-          // textTheme: GoogleFonts.poppinsTextTheme().apply(
-          //   bodyColor: WHITE,
-          // ),
-
-          // textTheme: GoogleFonts.poppinsTextTheme().apply(
-          //   bodyColor: WHITE,
-          // ),
-          primaryColor: PRIMARY,
-          canvasColor: SECONDARY,
-          accentColor: PRIMARY,
-        ),
-        home: Wrapper(),
-      ),
+          home: _conResult ? Wrapper() : InternetErrorDialog()),
     );
   }
 }
