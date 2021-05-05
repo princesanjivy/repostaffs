@@ -6,9 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/wrapper.dart';
 import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/internet_error_dialog.dart';
-import 'package:repostaffs/screens/wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _conResult = false;
+
+  /// wrong implementation change this
   StreamSubscription<ConnectivityResult> subscription;
+
   @override
   void initState() {
     super.initState();

@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -11,6 +13,7 @@ import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_dropdown.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/format_date.dart';
 import 'package:repostaffs/helpers/upload_file.dart';
 import 'package:repostaffs/screens/home_page.dart';
 
@@ -144,10 +147,7 @@ class _UploadStatusState extends State<UploadStatus> {
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircularProgressIndicator(
-                          backgroundColor: PRIMARY,
-                          valueColor: AlwaysStoppedAnimation<Color>(WHITE),
-                        ),
+                        CircularProgressIndicator(),
                         SizedBox(
                           height: 10.0,
                         ),
@@ -227,6 +227,7 @@ class _UploadStatusState extends State<UploadStatus> {
                       child: Container(
                         width: 225,
                         child: TextField(
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(13),
                             prefixIcon: Icon(
@@ -432,42 +433,49 @@ class _UploadStatusState extends State<UploadStatus> {
                     Center(
                       child: ElevatedButton(
                         onPressed: () async {
-                          // print(selectedServices);
-                          // print(fileImages);
-                          print(_customerName.text);
-                          print(_mobNo.text);
+                          List<String> customerNetImages = [];
 
-                          if (_customerName.text != '' && _mobNo.text != '') {
+                          if (_customerName.text != '' &&
+                              _mobNo.text != '' &&
+                              selectedServices.isNotEmpty &&
+                              fileImages.isNotEmpty) {
                             setState(() {
                               _inProcess = true;
                               uploading = true;
                             });
 
-                            final dateAndTime = DateTime.now();
-                            List customerNetImages = [];
                             for (int i = 0; i < fileImages.length; i++) {
-                              customerNetImages.add(
-                                  await UploadImageToFireStore(
-                                          file: fileImages[i], path: 'userpic1')
-                                      .uploadAndGetUrl());
+                              await UploadImageToFireStore(
+                                      file: fileImages[i], path: 'gallery')
+                                  .uploadAndGetUrl()
+                                  .then((url) async {
+                                await FirebaseFirestore.instance
+                                    .collection("gallery")
+                                    .add({
+                                  "url": url,
+                                  "customerName": _customerName.text,
+                                }).then((value) {
+                                  customerNetImages.add(value.id);
+                                });
+                              });
                             }
-                            // print(customerNetImages);
 
-                            FirebaseFirestore firestore =
-                                FirebaseFirestore.instance;
-                            firestore
+                            await FirebaseFirestore.instance
                                 .collection('status')
-                                .doc(firebaseUser.uid)
-                                .set({
+                                .add({
                               'uid': firebaseUser.uid,
                               'customerName': _customerName.text,
                               'customerPhoneNo': _mobNo.text,
                               'services': selectedServices,
                               'customerPhotos': customerNetImages,
-                              'timeStamp': dateAndTime
+                              'date': dateToString(DateTime.now()),
                             }).then((value) {
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage());
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ),
+                              );
                               Fluttertoast.showToast(
                                 msg:
                                     'Your Status has been successfully Updated',
@@ -477,12 +485,14 @@ class _UploadStatusState extends State<UploadStatus> {
                             });
                           } else {
                             Fluttertoast.showToast(
-                              msg: 'Please Provide the Customer details',
+                              msg: 'Enter all the details',
                               textColor: PRIMARY,
                               backgroundColor: WHITE,
                             );
                           }
-                        }, //firebase code to be added.
+                        },
+
+                        /// firebase code to be added.
                         style: ButtonStyle(
                           // elevation: MaterialStateProperty.all<double>(15),
                           shape:

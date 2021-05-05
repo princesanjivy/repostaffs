@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/format_date.dart';
 import 'package:repostaffs/screens/status_report.dart';
 
 class StaffStatusAdmin extends StatefulWidget {
@@ -16,48 +18,62 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar("Staff's Status"),
-      body: ListView.builder(
-        // padding: EdgeInsets.all(16),
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return InkWell(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      "https://images.unsplash.com/photo-1618374509394-3606c0aaf289?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80",
-                    ),
-                    backgroundColor: PRIMARY,
-                  ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .orderBy("name")
+              .snapshots(),
+          builder: (context, userSnapshot) {
+            if (!userSnapshot.hasData)
+              return Center(child: CircularProgressIndicator());
 
-                  /// todo change into separate class
-                  SizedBox(
-                    width: 16,
+            return ListView.builder(
+              itemCount: userSnapshot.data.size,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            userSnapshot.data.docs[index].get("imageUrl"),
+                          ),
+                          backgroundColor: PRIMARY,
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        MyText(
+                          userSnapshot.data.docs[index].get("name"),
+                          size: 16,
+                          fontWeight: "Light",
+                          color: WHITE,
+                        ),
+                      ],
+                    ),
                   ),
-                  MyText(
-                    "Prince",
-                    size: 16,
-                    fontWeight: "Light",
-                    color: WHITE,
-                  ),
-                ],
-              ),
-            ),
-            onTap: () {
-              /// todo
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StatusReport(),
-                ),
-              );
-            },
-          );
-        },
-      ),
+                  onTap: () {
+                    /// todo
+                    print(dateToString(pickedDate));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StatusReport(
+                          appBarTitle:
+                              userSnapshot.data.docs[index].get("name"),
+                          date: dateToString(pickedDate),
+                          profilePic:
+                              userSnapshot.data.docs[index].get("imageUrl"),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await showDatePicker(

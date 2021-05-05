@@ -31,10 +31,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(
-                    backgroundColor: PRIMARY,
-                    valueColor: AlwaysStoppedAnimation<Color>(WHITE),
-                  ),
+                  CircularProgressIndicator(),
                   SizedBox(
                     height: 10.0,
                   ),
