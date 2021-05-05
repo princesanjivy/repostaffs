@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/helpers/generate_excel.dart';
 import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/add_edit_service.dart';
 import 'package:repostaffs/screens/attendance_admin.dart';
+import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_status_admin.dart';
 
 class HomePageAdmin extends StatefulWidget {
@@ -22,7 +22,8 @@ class _HomePageAdminState extends State<HomePageAdmin> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        return Future.value(true);
+        print("don't pop");
+        return Future.value(false);
       },
       child: Scaffold(
         appBar: MyAppBar(
@@ -33,10 +34,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(
-                      backgroundColor: PRIMARY,
-                      valueColor: AlwaysStoppedAnimation<Color>(WHITE),
-                    ),
+                    CircularProgressIndicator(),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -196,8 +194,12 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(15),
                               onTap: () {
-                                // todo
-                                GenerateExcel(DateTime.now()).save();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Gallery(),
+                                  ),
+                                );
                               }, //Add Navigator to the Gallery Page
                               splashColor: WHITE,
                               radius: 300,

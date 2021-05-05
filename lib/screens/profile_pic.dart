@@ -23,7 +23,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   File _selectedFile;
-  bool _inProcess = false;
   bool _loading = false;
 
   // AuthService _auth = new AuthService();
@@ -40,9 +39,6 @@ class _ProfileState extends State<Profile> {
   }
 
   getImage(ImageSource source) async {
-    this.setState(() {
-      _inProcess = true;
-    });
     File image = await ImagePicker.pickImage(source: source);
     if (image != null) {
       File cropped = await ImageCropper.cropImage(
@@ -63,11 +59,6 @@ class _ProfileState extends State<Profile> {
           ));
       this.setState(() {
         _selectedFile = cropped;
-        _inProcess = false;
-      });
-    } else {
-      this.setState(() {
-        _inProcess = false;
       });
     }
   }
@@ -81,10 +72,7 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(
-                    backgroundColor: PRIMARY,
-                    valueColor: AlwaysStoppedAnimation<Color>(WHITE),
-                  ),
+                  CircularProgressIndicator(),
                   SizedBox(
                     height: 10.0,
                   ),

@@ -95,6 +95,7 @@ class _SignUpState extends State<SignUp> {
                         height: 35.0,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.call,
@@ -352,7 +353,7 @@ class _SignUpState extends State<SignUp> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           MyText(
-                            'Don\'t have an account? ',
+                            'Have an account? ',
                             color: WHITE,
                             fontWeight: 'Medium',
                             size: 16,
