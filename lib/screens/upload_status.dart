@@ -1,14 +1,18 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_dropdown.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/upload_file.dart';
+import 'package:repostaffs/screens/home_page.dart';
 
 class UploadStatus extends StatefulWidget {
   @override
@@ -16,13 +20,21 @@ class UploadStatus extends StatefulWidget {
 }
 
 class _UploadStatusState extends State<UploadStatus> {
-  List services = [];
+  List services = [
+    {'name': 'Select Service'}
+  ];
 
   TextEditingController _customerName = new TextEditingController();
   TextEditingController _mobNo = new TextEditingController();
+
+  List fileImages = [];
   int count = 1;
   String choosenValue;
   File _selectedFile;
+  int photoLimit = 1;
+  int stateIndex = 0;
+  bool uploading = false;
+
   bool _inProcess = false;
 
   List items = [];
@@ -39,15 +51,22 @@ class _UploadStatusState extends State<UploadStatus> {
       _inProcess = true;
     });
     await FirebaseFirestore.instance.collection("services").get().then((value) {
-      for (int i = 0; i < value.size; i++)
-        services.add(value.docs[i].get("name").toString());
+      for (int i = 0; i < value.size; i++) {
+        var serviceDetails = {
+          'name': value.docs[i].get("name").toString(),
+          'price': value.docs[i].get("price").toString()
+        };
+        services.add(serviceDetails);
+      }
 
       // items.add(Text("Hello"));
       items.add(
         MyDropDown(
-            // services: services,
-            ),
+          services: services,
+          stateIndexx: stateIndex,
+        ),
       );
+      stateIndex++;
 
       setState(() {
         _inProcess = false;
@@ -55,33 +74,41 @@ class _UploadStatusState extends State<UploadStatus> {
     });
   }
 
-  getImage(ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
-    if (image != null) {
-      File cropped = await ImageCropper.cropImage(
-          sourcePath: image.path,
-          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-          compressQuality: 100,
-          maxWidth: 700,
-          maxHeight: 700,
-          compressFormat: ImageCompressFormat.jpg,
-          androidUiSettings: AndroidUiSettings(
-            activeControlsWidgetColor: Colors.purple[800],
-            toolbarWidgetColor: WHITE,
-            cropGridColor: WHITE,
-            toolbarColor: SECONDARY,
-            toolbarTitle: "Adjust your Image",
-            statusBarColor: SECONDARY,
-            backgroundColor: SECONDARY,
-          ));
-      this.setState(() {
-        _selectedFile = cropped;
-      });
-    }
+  Future<bool> getImage(ImageSource source) async {
+    bool isDone;
+    await ImagePicker.pickImage(source: source).then((image) async {
+      if (image != null) {
+        File cropped = await ImageCropper.cropImage(
+            sourcePath: image.path,
+            aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2),
+            compressQuality: 100,
+            maxWidth: 300,
+            maxHeight: 300,
+            compressFormat: ImageCompressFormat.jpg,
+            androidUiSettings: AndroidUiSettings(
+              activeControlsWidgetColor: Colors.purple[800],
+              toolbarWidgetColor: WHITE,
+              cropGridColor: WHITE,
+              toolbarColor: SECONDARY,
+              toolbarTitle: "Adjust your Image",
+              statusBarColor: SECONDARY,
+              backgroundColor: SECONDARY,
+            ));
+        this.setState(() {
+          _selectedFile = cropped;
+        });
+        isDone = true;
+      } else {
+        isDone = false;
+      }
+    });
+    return isDone;
   }
 
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -96,9 +123,11 @@ class _UploadStatusState extends State<UploadStatus> {
             //     "Heyyy" + DateTime.now().microsecondsSinceEpoch.toString()));
             items.add(
               MyDropDown(
-                  // services: services,
-                  ),
+                services: services,
+                stateIndexx: stateIndex,
+              ),
             );
+            stateIndex++;
           });
         },
         child: Icon(
@@ -110,7 +139,33 @@ class _UploadStatusState extends State<UploadStatus> {
       ),
       appBar: MyAppBar('Service Status'),
       body: _inProcess
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: uploading
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          backgroundColor: PRIMARY,
+                          valueColor: AlwaysStoppedAnimation<Color>(WHITE),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        MyText(
+                          'Updating Your Customer\'s Service Status',
+                          color: WHITE,
+                          fontWeight: 'Medium',
+                          size: 14,
+                        ),
+                        MyText(
+                          'Please Wait',
+                          color: WHITE,
+                          fontWeight: 'Medium',
+                          size: 14,
+                        )
+                      ],
+                    )
+                  : CircularProgressIndicator())
           : SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Padding(
@@ -123,7 +178,7 @@ class _UploadStatusState extends State<UploadStatus> {
                         width: 225,
                         child: TextField(
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(15),
+                            contentPadding: EdgeInsets.all(13),
                             prefixIcon: Icon(
                               Icons.person,
                               color: WHITE,
@@ -173,7 +228,7 @@ class _UploadStatusState extends State<UploadStatus> {
                         width: 225,
                         child: TextField(
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(15),
+                            contentPadding: EdgeInsets.all(13),
                             prefixIcon: Icon(
                               Icons.call_rounded,
                               color: WHITE,
@@ -223,92 +278,211 @@ class _UploadStatusState extends State<UploadStatus> {
                       shrinkWrap: true,
                       itemCount: items.length,
                       itemBuilder: (context, index) {
-                        return Row(
+                        return Column(
                           children: [
-                            items[index],
                             if (index != 0)
-                              IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: () {
-                                    setState(() {
-                                      items.removeAt(index);
-                                    });
-                                  }),
+                              SizedBox(
+                                height: 30.0,
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                items[index],
+                                Opacity(
+                                  opacity: index == 0 ? 0 : 1,
+                                  child: IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (index != 0) items.removeAt(index);
+                                          if ((selectedServices.length - 1) >=
+                                              index)
+                                            selectedServices.removeAt(index);
+                                        });
+                                      }),
+                                ),
+                              ],
+                            ),
                           ],
                         );
                       },
                     ),
-                    // ListView.builder(
-                    //   physics: ScrollPhysics(),
-                    //   shrinkWrap: true,
-                    //   itemCount: count,
-                    //   itemBuilder: (context, index) => Center(
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: [
-                    //         Row(
-                    //           children: [
-                    //             // SizedBox(
-                    //             //   width: 64,
-                    //             // ),
-                    //             MyDropDown(
-                    //               services: services,
-                    //             ),
-                    //             index != 0
-                    //                 ? IconButton(
-                    //                     splashRadius: 20.0,
-                    //                     icon: Icon(
-                    //                       Icons.close,
-                    //                       color: WHITE,
-                    //                     ),
-                    //                     onPressed: () {
-                    //                       setState(() {
-                    //                         // if(index!=
-                    //                       });
-                    //                     },
-                    //                   )
-                    //                 : Container()
-                    //           ],
-                    //         ),
-                    //         SizedBox(
-                    //           height: 25,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    //
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          getImage(ImageSource.camera);
-                        },
-                        style: ButtonStyle(
-                          // elevation: MaterialStateProperty.all<double>(15),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(19),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    if (fileImages.isNotEmpty)
+                      SizedBox(
+                        height: 125,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ListView.builder(
+                              physics: ScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: fileImages.length,
+                              itemBuilder: (context, index) => Center(
+                                child: Row(
+                                  children: [
+                                    Stack(children: [
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        color: SECONDARY,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: WHITE, width: 1),
+                                              image: DecorationImage(
+                                                image: FileImage(
+                                                    fileImages[index]),
+                                                fit: BoxFit.fill,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          width: 150,
+                                          height: 200,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 135,
+                                        child: Material(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          color: WHITE,
+                                          child: InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            radius: 50,
+                                            splashColor: SECONDARY,
+                                            onTap: () {
+                                              setState(() {
+                                                fileImages.removeAt(index);
+                                                photoLimit--;
+                                                print(fileImages);
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(40),
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.close,
+                                                  size: 10,
+                                                  color: PRIMARY,
+                                                ),
+                                              ),
+                                              height: 20,
+                                              width: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          minimumSize:
-                              MaterialStateProperty.all<Size>(Size(120, 55)),
-                          backgroundColor: MaterialStateProperty.all((PRIMARY)),
-                        ),
-                        child: MyText(
-                          'Add Photos',
-                          color: WHITE,
-                          fontWeight: 'Light',
-                          size: 18,
+                          ],
                         ),
                       ),
+                    SizedBox(
+                      height: 35,
                     ),
+                    if (photoLimit <= 2)
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            bool val = await getImage(ImageSource.camera);
+                            if (val) {
+                              setState(() {
+                                photoLimit++;
+                                fileImages.add(_selectedFile);
+                              });
+                              print(fileImages);
+                            }
+                          },
+                          style: ButtonStyle(
+                            // elevation: MaterialStateProperty.all<double>(15),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(19),
+                              ),
+                            ),
+                            minimumSize:
+                                MaterialStateProperty.all<Size>(Size(120, 55)),
+                            backgroundColor:
+                                MaterialStateProperty.all((PRIMARY)),
+                          ),
+                          child: MyText(
+                            'Add Photos',
+                            color: WHITE,
+                            fontWeight: 'Light',
+                            size: 18,
+                          ),
+                        ),
+                      ),
                     SizedBox(
                       height: 30,
                     ),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () async {}, //firebase code to be added.
+                        onPressed: () async {
+                          // print(selectedServices);
+                          // print(fileImages);
+                          print(_customerName.text);
+                          print(_mobNo.text);
+
+                          if (_customerName.text != '' && _mobNo.text != '') {
+                            setState(() {
+                              _inProcess = true;
+                              uploading = true;
+                            });
+
+                            final dateAndTime = DateTime.now();
+                            List customerNetImages = [];
+                            for (int i = 0; i < fileImages.length; i++) {
+                              customerNetImages.add(
+                                  await UploadImageToFireStore(
+                                          file: fileImages[i], path: 'userpic1')
+                                      .uploadAndGetUrl());
+                            }
+                            // print(customerNetImages);
+
+                            FirebaseFirestore firestore =
+                                FirebaseFirestore.instance;
+                            firestore
+                                .collection('status')
+                                .doc(firebaseUser.uid)
+                                .set({
+                              'uid': firebaseUser.uid,
+                              'customerName': _customerName.text,
+                              'customerPhoneNo': _mobNo.text,
+                              'services': selectedServices,
+                              'customerPhotos': customerNetImages,
+                              'timeStamp': dateAndTime
+                            }).then((value) {
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage());
+                              Fluttertoast.showToast(
+                                msg:
+                                    'Your Status has been successfully Updated',
+                                textColor: PRIMARY,
+                                backgroundColor: WHITE,
+                              );
+                            });
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: 'Please Provide the Customer details',
+                              textColor: PRIMARY,
+                              backgroundColor: WHITE,
+                            );
+                          }
+                        }, //firebase code to be added.
                         style: ButtonStyle(
                           // elevation: MaterialStateProperty.all<double>(15),
                           shape:
@@ -332,28 +506,10 @@ class _UploadStatusState extends State<UploadStatus> {
                     SizedBox(
                       height: 30.0,
                     ),
-                    Center(
-                      //Add Images preview list code.
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: _selectedFile == null
-                            ? Container()
-                            : Image.file(
-                                _selectedFile,
-                                fit: BoxFit.cover,
-                                width: 200,
-                                height: 200,
-                              ),
-                      ),
-                    ),
                   ],
                 ),
               ),
             ),
     );
-  }
-
-  Widget temp(Widget d) {
-    return d;
   }
 }

@@ -3,12 +3,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 
+List selectedServices = [];
+
 class MyDropDown extends StatelessWidget {
-  String choosenValue;
+  List services;
+  int stateIndexx;
+  MyDropDown({this.services, this.stateIndexx});
+  String choosenValue = 'Select Service';
+  String priceVal = 'None';
+  bool notextField = false;
+  bool showHint = false;
+
+  TextEditingController _priceCon = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    List t = ["A", "B", "C"]; //change this get from params
     return Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       width: 225,
@@ -17,43 +26,107 @@ class MyDropDown extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: StatefulBuilder(builder: (context, setState) {
-        return DropdownButton(
-          underline: SizedBox(),
-          icon: Icon(
-            Icons.arrow_drop_down_circle_sharp,
-          ),
-          isExpanded: true,
-          hint: MyText(
-            'Select Service',
-            fontWeight: 'MEDIUM',
-            size: 18,
-            color: WHITE,
-          ),
-          value: choosenValue,
-          onChanged: (service) {
-            setState(() {
-              choosenValue = service;
-            });
-          },
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            color: WHITE,
-          ),
-          iconEnabledColor: WHITE,
-          focusColor: WHITE,
-          items: t
-              .map(
-                (service) => DropdownMenuItem(
-                  value: service,
-                  child: MyText(
-                    service,
+        return (notextField)
+            ? Row(
+                children: [
+                  MyText(
+                    choosenValue,
                     color: WHITE,
-                    fontWeight: 'MEDIUM',
+                    size: 18,
                   ),
-                ),
+                  Expanded(
+                    child: Container(
+                      width: 225,
+                      child: TextField(
+                        style: GoogleFonts.poppins(fontSize: 18, color: WHITE),
+                        textAlign: TextAlign.right,
+                        decoration: InputDecoration(
+                          hintText: showHint ? priceVal : '',
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 18,
+                            color: WHITE,
+                          ),
+                          contentPadding: EdgeInsets.all(9),
+                          labelStyle: GoogleFonts.poppins(
+                            color: WHITE,
+                            fontSize: 18,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        controller: _priceCon,
+                        onChanged: (myPrice) {
+                          // print(ind);
+                          if (myPrice.isNotEmpty)
+                            selectedServices[stateIndexx] = {
+                              'name': choosenValue,
+                              'price': myPrice
+                            };
+                          else if (myPrice.isEmpty) {
+                            setState(() {
+                              showHint = true;
+                            });
+                            selectedServices[stateIndexx] = {
+                              'name': choosenValue,
+                              'price': priceVal
+                            };
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               )
-              .toList(),
-        );
+            : DropdownButton(
+                underline: SizedBox(),
+                icon: Icon(
+                  Icons.arrow_drop_down_circle_sharp,
+                ),
+                isExpanded: true,
+                // hint: MyText(
+                //   'Select Service',
+                //   fontWeight: 'MEDIUM',
+                //   size: 18,
+                //   color: WHITE,
+                // ),
+                value: 'Select Service',
+
+                onChanged: (service) {
+                  // print(ind);
+                  if (service != 'Select Service') {
+                    setState(() {
+                      for (int i = 0; i < services.length; i++) {
+                        if (service == services[i]['name']) {
+                          priceVal = services[i]['price'];
+                          choosenValue = services[i]['name'];
+                          _priceCon.text = priceVal;
+                        }
+                      }
+                      notextField = true;
+                    });
+                    selectedServices
+                        .add({'name': choosenValue, 'price': _priceCon.text});
+                  }
+                },
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: WHITE,
+                ),
+                iconEnabledColor: WHITE,
+                focusColor: WHITE,
+                items: services
+                        .map(
+                          (service) => DropdownMenuItem(
+                            value: service['name'],
+                            child: MyText(
+                              service['name'],
+                              color: WHITE,
+                              fontWeight: 'MEDIUM',
+                            ),
+                          ),
+                        )
+                        .toList() ??
+                    [],
+              );
       }),
     );
   }
