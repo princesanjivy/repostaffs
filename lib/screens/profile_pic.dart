@@ -39,7 +39,8 @@ class _ProfileState extends State<Profile> {
   }
 
   getImage(ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
+    final _picker = ImagePicker();
+    PickedFile image = await _picker.getImage(source: source);
     if (image != null) {
       File cropped = await ImageCropper.cropImage(
           sourcePath: image.path,
