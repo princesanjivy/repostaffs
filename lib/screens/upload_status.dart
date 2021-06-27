@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,26 +78,11 @@ class _UploadStatusState extends State<UploadStatus> {
 
   Future<bool> getImage(ImageSource source) async {
     bool isDone;
-    await ImagePicker.pickImage(source: source).then((image) async {
+    final _picker = ImagePicker();
+    await _picker.getImage(source: source).then((image) async {
       if (image != null) {
-        File cropped = await ImageCropper.cropImage(
-            sourcePath: image.path,
-            aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2),
-            compressQuality: 100,
-            maxWidth: 300,
-            maxHeight: 300,
-            compressFormat: ImageCompressFormat.jpg,
-            androidUiSettings: AndroidUiSettings(
-              activeControlsWidgetColor: Colors.purple[800],
-              toolbarWidgetColor: WHITE,
-              cropGridColor: WHITE,
-              toolbarColor: SECONDARY,
-              toolbarTitle: "Adjust your Image",
-              statusBarColor: SECONDARY,
-              backgroundColor: SECONDARY,
-            ));
         this.setState(() {
-          _selectedFile = cropped;
+          _selectedFile = File(image.path);
         });
         isDone = true;
       } else {
@@ -523,3 +507,5 @@ class _UploadStatusState extends State<UploadStatus> {
     );
   }
 }
+
+class Imagepicker {}
