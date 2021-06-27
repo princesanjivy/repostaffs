@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 import 'package:repostaffs/components/my_appbar.dart';
-import 'package:repostaffs/components/my_text.dart';
-import 'package:repostaffs/constants.dart';
 
 class Gallery extends StatefulWidget {
   @override
@@ -12,6 +14,8 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> {
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
     return Scaffold(
       appBar: MyAppBar("Gallery"),
       body: StreamBuilder<QuerySnapshot>(
@@ -32,16 +36,68 @@ class _GalleryState extends State<Gallery> {
                 crossAxisSpacing: 8,
               ),
               itemBuilder: (context, index) {
-                return GridTile(
-                  child: Image.network(
-                    gallerySnapshot.data.docs[index].get("url"),
-                    fit: BoxFit.cover,
-                  ),
-                  footer: Center(
-                    child: MyText(
-                      gallerySnapshot.data.docs[index].get("customerName"),
-                      color: WHITE,
-                      fontWeight: "Medium",
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FullScreenView(
+                          child: Image.network(
+                            gallerySnapshot.data.docs[index].get("url"),
+                            fit: BoxFit.cover,
+                          ),
+                          title: gallerySnapshot.data.docs[index]
+                              .get("customerName")
+                              .toString(),
+                        ),
+                      ),
+                    );
+                  },
+                  onDoubleTap: () {
+                    if (firebaseUser.email == "getme.jj16@gmail.com")
+                      showDialog(
+                          context: context,
+                          builder: (context) => SimpleDialog(
+                                children: [
+                                  Center(
+                                    child: Text(
+                                        "Do you really want to delete this?"),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          await FirebaseFirestore.instance
+                                              .collection("gallery")
+                                              .doc(gallerySnapshot
+                                                  .data.docs[index].id)
+                                              .delete();
+
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("YES"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("NO"),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ));
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: GridTile(
+                      child: CachedNetworkImage(
+                        imageUrl: gallerySnapshot.data.docs[index].get("url"),
+                        fit: BoxFit.cover,
+                        placeholder: (context, value) =>
+                            Center(child: CircularProgressIndicator()),
+                      ),
                     ),
                   ),
                 );

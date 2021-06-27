@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repostaffs/components/my_appbar.dart';
@@ -45,12 +46,27 @@ class _AddEditServiceState extends State<AddEditService> {
                             return Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 16),
-                              child: MyRowText(
-                                heading: servicesSnapshot.data.docs[index]
-                                    .get("name"),
-                                text: "₹" +
-                                    servicesSnapshot.data.docs[index]
-                                        .get("price"),
+                              child: Stack(
+                                alignment: Alignment.centerRight,
+                                children: [
+                                  IconButton(
+                                    onPressed: () async {
+                                      await FirebaseFirestore.instance
+                                          .collection("services")
+                                          .doc(servicesSnapshot
+                                              .data.docs[index].id)
+                                          .delete();
+                                    },
+                                    icon: Icon(Icons.close),
+                                  ),
+                                  MyRowText(
+                                    heading: servicesSnapshot.data.docs[index]
+                                        .get("name"),
+                                    text: "₹" +
+                                        servicesSnapshot.data.docs[index]
+                                            .get("price"),
+                                  ),
+                                ],
                               ),
                             );
                           },
