@@ -66,6 +66,7 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                           date: dateToString(pickedDate),
                           profilePic:
                               userSnapshot.data.docs[index].get("imageUrl"),
+                          uid: userSnapshot.data.docs[index].id,
                         ),
                       ),
                     );

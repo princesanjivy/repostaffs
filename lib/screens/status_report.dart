@@ -6,12 +6,13 @@ import 'package:repostaffs/components/row_text.dart';
 import 'package:repostaffs/constants.dart';
 
 class StatusReport extends StatefulWidget {
-  final String appBarTitle, profilePic, date;
+  final String appBarTitle, profilePic, date, uid;
 
   StatusReport({
     this.date,
     this.appBarTitle,
     this.profilePic,
+    this.uid,
   });
 
   @override
@@ -29,6 +30,7 @@ class _StatusReportState extends State<StatusReport> {
         stream: FirebaseFirestore.instance
             .collection("status")
             .where("date", isEqualTo: widget.date)
+            .where("uid", isEqualTo: widget.uid)
             .orderBy("customerName", descending: false)
             .snapshots(),
         builder: (context, statusSnapshot) {
