@@ -7,6 +7,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/helpers/format_date.dart';
 import 'package:repostaffs/providers/auth.dart';
 
 class StaffAttendance extends StatefulWidget {
@@ -20,7 +21,7 @@ class _StaffAttendanceState extends State<StaffAttendance> {
   QRViewController controller;
 
   final GlobalKey qrKey = GlobalKey();
-  String code = "freshthoughts";
+  String code = dateToString(DateTime.now());
 
   @override
   void reassemble() {
@@ -141,7 +142,7 @@ class _StaffAttendanceState extends State<StaffAttendance> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) async {
-      if (code == scanData.code) {
+      if ("freshthoughts" == scanData.code) {
         setState(() {
           controller.stopCamera();
           callMethod = true;
