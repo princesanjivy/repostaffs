@@ -37,9 +37,12 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData)
               return Center(child: CircularProgressIndicator());
 
-            int temp = 10;
+            int temp = 0;
 
-            if (snapshot.data.size >= 5) temp = snapshot.data.size;
+            if (snapshot.data.size >= 10)
+              temp = 10;
+            else
+              temp = snapshot.data.size;
 
             for (int i = 0; i < temp; i++) {
               imageList.add(snapshot.data.docs[i].get("url"));
