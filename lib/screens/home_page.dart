@@ -12,6 +12,7 @@ import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/screens/upload_status.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,7 +46,13 @@ class _HomePageState extends State<HomePage> {
               temp = snapshot.data.size;
 
             for (int i = 0; i < temp; i++) {
-              imageList.add(snapshot.data.docs[i].get("url"));
+              imageList.add({
+                'imageLink': snapshot.data.docs[i].get("url"),
+                'customerName':
+                    snapshot.data.docs[i].get('customerName').toString() != ''
+                        ? snapshot.data.docs[i].get('customerName').toString()
+                        : 'Customer Image'
+              });
             }
 
             return Scaffold(
@@ -81,20 +88,41 @@ class _HomePageState extends State<HomePage> {
                           CarouselSlider.builder(
                             itemCount: imageList.length,
                             itemBuilder: (context, index, image) {
-                              return Container(
-                                width: 300,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: WHITE,
-                                    width: 3,
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(imageList[index]),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    15,
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FullScreenView(
+                                        child: Image.network(
+                                          imageList[index]['imageLink'],
+                                          fit: BoxFit.cover,
+                                        ),
+                                        title: imageList[index]['customerName'],
+
+                                        // title: gallerySnapshot.data.docs[index]
+                                        // .get("customerName")
+                                        // .toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 300,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: WHITE,
+                                      width: 3,
+                                    ),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          imageList[index]['imageLink']),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                      15,
+                                    ),
                                   ),
                                 ),
                               );

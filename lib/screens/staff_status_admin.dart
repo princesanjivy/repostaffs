@@ -5,6 +5,7 @@ import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/helpers/format_date.dart';
 import 'package:repostaffs/screens/status_report.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 
 class StaffStatusAdmin extends StatefulWidget {
   @override
@@ -36,11 +37,33 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            userSnapshot.data.docs[index].get("imageUrl"),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullScreenView(
+                                  child: Image.network(
+                                    userSnapshot.data.docs[index]
+                                        .get("imageUrl"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  title:
+                                      userSnapshot.data.docs[index].get("name"),
+                                ),
+
+                                // title: gallerySnapshot.data.docs[index]
+                                // .get("customerName")
+                                // .toString(),
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              userSnapshot.data.docs[index].get("imageUrl"),
+                            ),
+                            backgroundColor: PRIMARY,
                           ),
-                          backgroundColor: PRIMARY,
                         ),
                         SizedBox(
                           width: 16,

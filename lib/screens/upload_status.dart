@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:repostaffs/components/my_appbar.dart';
@@ -417,12 +416,9 @@ class _UploadStatusState extends State<UploadStatus> {
                     Center(
                       child: ElevatedButton(
                         onPressed: () async {
-                          List<String> customerNetImages = [];
+                          if (selectedServices.isNotEmpty) {
+                            List<String> customerNetImages = [];
 
-                          if (_customerName.text != '' &&
-                              _mobNo.text != '' &&
-                              selectedServices.isNotEmpty &&
-                              fileImages.isNotEmpty) {
                             setState(() {
                               _inProcess = true;
                               uploading = true;

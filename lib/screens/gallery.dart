@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:repostaffs/components/fullscreen_view.dart';
@@ -68,6 +70,15 @@ class _GalleryState extends State<Gallery> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () async {
+                                          var deleteImageUrl = gallerySnapshot
+                                              .data.docs[index]
+                                              .get('url');
+
+                                          // print(deleteImageUrl);
+                                          await FirebaseStorage.instance
+                                              .refFromURL(deleteImageUrl)
+                                              .delete();
+
                                           await FirebaseFirestore.instance
                                               .collection("gallery")
                                               .doc(gallerySnapshot
