@@ -4,6 +4,7 @@ import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/components/row_text.dart';
 import 'package:repostaffs/constants.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 
 class StatusReport extends StatefulWidget {
   final String appBarTitle, profilePic, date, uid;
@@ -50,10 +51,12 @@ class _StatusReportState extends State<StatusReport> {
                     String services = "";
                     List serviceData =
                         statusSnapshot.data.docs[pageIndex].get("services");
-                    for (Map data in serviceData) {
-                      services += data["name"] + ', ';
+                    for (int i = 0; i < serviceData.length; i++) {
+                      if (i != serviceData.length - 1)
+                        services += serviceData[i]["name"] + ', ';
+                      else
+                        services += serviceData[i]["name"] + '. ';
                     }
-
                     return ListView(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       children: [
@@ -74,7 +77,7 @@ class _StatusReportState extends State<StatusReport> {
                           height: 32,
                         ),
                         MyRowText(
-                          heading: "Customer Name",
+                          heading: "Customer Name :",
                           text: statusSnapshot.data.docs[pageIndex]
                               .get("customerName"),
                         ),
@@ -82,7 +85,7 @@ class _StatusReportState extends State<StatusReport> {
                           height: 16,
                         ),
                         MyRowText(
-                          heading: "Customer Ph.No",
+                          heading: "Customer Ph.No :",
                           text: statusSnapshot.data.docs[pageIndex]
                               .get("customerPhoneNo"),
                         ),
@@ -90,7 +93,7 @@ class _StatusReportState extends State<StatusReport> {
                           height: 16,
                         ),
                         MyRowText(
-                          heading: "Services taken",
+                          heading: "Services taken :",
                           text: services,
                         ),
                         SizedBox(
@@ -99,70 +102,114 @@ class _StatusReportState extends State<StatusReport> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            StreamBuilder<DocumentSnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection("gallery")
-                                  .doc(statusSnapshot.data.docs[pageIndex]
-                                      .get("customerPhotos")[0])
-                                  .snapshots(),
-                              builder: (context, image) {
-                                if (!image.hasData)
-                                  return Center(
-                                      child: CircularProgressIndicator());
+                            if (statusSnapshot.data.docs[pageIndex]
+                                    .get('customerPhotos')
+                                    .length !=
+                                0)
+                              StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection("gallery")
+                                    .doc(statusSnapshot.data.docs[pageIndex]
+                                        .get("customerPhotos")[0])
+                                    .snapshots(),
+                                builder: (context, image) {
+                                  if (!image.hasData)
+                                    return Center(
+                                        child: CircularProgressIndicator());
 
-                                return Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  color: SECONDARY,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: WHITE, width: 1),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                              image.data.get("url")),
-                                          fit: BoxFit.fill,
-                                        ),
+                                  return Card(
+                                    shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    width: 150,
-                                    height: 200,
-                                  ),
-                                );
-                              },
+                                    color: SECONDARY,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                FullScreenView(
+                                              child: Image.network(
+                                                image.data.get('url'),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              title: statusSnapshot
+                                                  .data.docs[pageIndex]
+                                                  .get('customerName'),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: WHITE, width: 1),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                  image.data.get("url")),
+                                              fit: BoxFit.fill,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        width: 150,
+                                        height: 200,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            SizedBox(
+                              width: 5.0,
                             ),
-                            StreamBuilder<DocumentSnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection("gallery")
-                                  .doc(statusSnapshot.data.docs[pageIndex]
-                                      .get("customerPhotos")[0])
-                                  .snapshots(),
-                              builder: (context, image) {
-                                if (!image.hasData)
-                                  return Center(
-                                      child: CircularProgressIndicator());
+                            if (statusSnapshot.data.docs[pageIndex]
+                                    .get('customerPhotos')
+                                    .length >
+                                1)
+                              StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection("gallery")
+                                    .doc(statusSnapshot.data.docs[pageIndex]
+                                        .get("customerPhotos")[0])
+                                    .snapshots(),
+                                builder: (context, image) {
+                                  if (!image.hasData)
+                                    return Center(
+                                        child: CircularProgressIndicator());
 
-                                return Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  color: SECONDARY,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: WHITE, width: 1),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                              image.data.get("url")),
-                                          fit: BoxFit.fill,
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => FullScreenView(
+                                            child: Image.network(
+                                              image.data.get('url'),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            title: statusSnapshot
+                                                .data.docs[pageIndex]
+                                                .get('customerName'),
+                                          ),
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    width: 150,
-                                    height: 200,
-                                  ),
-                                );
-                              },
-                            ),
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: WHITE, width: 1),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                image.data.get("url")),
+                                            fit: BoxFit.fill,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      width: 150,
+                                      height: 200,
+                                    ),
+                                  );
+                                },
+                              ),
                           ],
                         ),
                       ],

@@ -12,6 +12,8 @@ import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/screens/upload_status.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,6 +22,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _loggingOut = false;
+
+  void launchURL(String url) async {
+    if (await canLaunch(url))
+      launch(url);
+    else
+      print('Invalid URL: $url');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,13 @@ class _HomePageState extends State<HomePage> {
               temp = snapshot.data.size;
 
             for (int i = 0; i < temp; i++) {
-              imageList.add(snapshot.data.docs[i].get("url"));
+              imageList.add({
+                'imageLink': snapshot.data.docs[i].get("url"),
+                'customerName':
+                    snapshot.data.docs[i].get('customerName').toString() != ''
+                        ? snapshot.data.docs[i].get('customerName').toString()
+                        : 'Customer Image'
+              });
             }
 
             return Scaffold(
@@ -81,20 +96,41 @@ class _HomePageState extends State<HomePage> {
                           CarouselSlider.builder(
                             itemCount: imageList.length,
                             itemBuilder: (context, index, image) {
-                              return Container(
-                                width: 300,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: WHITE,
-                                    width: 3,
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(imageList[index]),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    15,
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FullScreenView(
+                                        child: Image.network(
+                                          imageList[index]['imageLink'],
+                                          fit: BoxFit.cover,
+                                        ),
+                                        title: imageList[index]['customerName'],
+
+                                        // title: gallerySnapshot.data.docs[index]
+                                        // .get("customerName")
+                                        // .toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 300,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: WHITE,
+                                      width: 3,
+                                    ),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          imageList[index]['imageLink']),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                      15,
+                                    ),
                                   ),
                                 ),
                               );
@@ -106,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                               enableInfiniteScroll: true,
                             ),
                           ),
-                          SizedBox(height: 100),
+                          SizedBox(height: 80),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -365,6 +401,52 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 40.0,
+                          ),
+                          MyText(
+                            'Designed & Developed by',
+                            color: WHITE,
+                            fontWeight: 'Medium',
+                            size: 10,
+                          ),
+                          SizedBox(
+                            height: 2.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  launchURL('https://linktr.ee/princesanjivy');
+                                },
+                                child: MyText(
+                                  'Princesanjivy',
+                                  color: WHITE,
+                                  size: 12,
+                                  fontWeight: 'SemiBold',
+                                ),
+                              ),
+                              MyText(
+                                ' and ',
+                                color: WHITE,
+                                size: 12,
+                                fontWeight: 'SemiBold',
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  launchURL(
+                                      'https://vigneshhendrix.github.io/#/');
+                                },
+                                child: MyText(
+                                  'Vignesh Hendrix',
+                                  color: WHITE,
+                                  size: 12,
+                                  fontWeight: 'SemiBold',
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
