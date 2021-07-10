@@ -116,6 +116,7 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(15),
                             onTap: () {
+                              // changeScreen(context, StaffStatusAdmin());
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -200,7 +201,8 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                     builder: (context) => Gallery(),
                                   ),
                                 );
-                              }, //Add Navigator to the Gallery Page
+                              },
+                              //Add Navigator to the Gallery Page
                               splashColor: WHITE,
                               radius: 300,
                               child: Container(

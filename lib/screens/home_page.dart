@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
             int temp = 0;
 
             if (snapshot.data.size >= 10)
-              temp = 10;
+              temp = 5;
             else
               temp = snapshot.data.size;
 
@@ -86,55 +86,61 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: 30,
                           ),
-                          CarouselSlider.builder(
-                            itemCount: imageList.length,
-                            itemBuilder: (context, index, image) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FullScreenView(
-                                        child: Image.network(
-                                          imageList[index]['imageLink'],
-                                          fit: BoxFit.cover,
-                                        ),
-                                        title: imageList[index]['customerName'],
+                          imageList.length == 0
+                              ? Center(
+                                  child: Text("No photos available"),
+                                )
+                              : CarouselSlider.builder(
+                                  itemCount: imageList.length,
+                                  itemBuilder: (context, index, image) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                FullScreenView(
+                                              child: Image.network(
+                                                imageList[index]['imageLink'],
+                                                fit: BoxFit.cover,
+                                              ),
+                                              title: imageList[index]
+                                                  ['customerName'],
 
-                                        // title: gallerySnapshot.data.docs[index]
-                                        // .get("customerName")
-                                        // .toString(),
+                                              // title: gallerySnapshot.data.docs[index]
+                                              // .get("customerName")
+                                              // .toString(),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 300,
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: WHITE,
+                                            width: 3,
+                                          ),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                imageList[index]['imageLink']),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  width: 300,
-                                  height: 200,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: WHITE,
-                                      width: 3,
-                                    ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          imageList[index]['imageLink']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                      15,
-                                    ),
+                                    );
+                                  },
+                                  options: CarouselOptions(
+                                    autoPlay: true,
+                                    autoPlayCurve: Curves.fastOutSlowIn,
+                                    enlargeCenterPage: true,
+                                    enableInfiniteScroll: true,
                                   ),
                                 ),
-                              );
-                            },
-                            options: CarouselOptions(
-                              autoPlay: true,
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enlargeCenterPage: true,
-                              enableInfiniteScroll: true,
-                            ),
-                          ),
                           SizedBox(height: 80),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

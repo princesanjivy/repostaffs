@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +26,10 @@ class _GalleryState extends State<Gallery> {
               .snapshots(),
           builder: (context, gallerySnapshot) {
             if (!gallerySnapshot.hasData)
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                  child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+              ));
 
             return GridView.builder(
               padding: EdgeInsets.all(8),
@@ -106,8 +108,11 @@ class _GalleryState extends State<Gallery> {
                       child: CachedNetworkImage(
                         imageUrl: gallerySnapshot.data.docs[index].get("url"),
                         fit: BoxFit.cover,
-                        placeholder: (context, value) =>
-                            Center(child: CircularProgressIndicator()),
+                        placeholder: (context, value) => Center(
+                            child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black),
+                        )),
                       ),
                     ),
                   ),
