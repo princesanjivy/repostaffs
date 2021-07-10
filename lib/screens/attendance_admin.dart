@@ -34,7 +34,7 @@ class _AttendancePreviewState extends State<AttendancePreview> {
           return attendanceSnapshot.data.size == 0
               ? Center(
                   child: MyText(
-                    "No data found!",
+                    "Nobody still here",
                     color: WHITE,
                     fontWeight: "Light",
                   ),

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
@@ -12,7 +13,6 @@ import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/screens/upload_status.dart';
-import 'package:repostaffs/components/fullscreen_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,13 +22,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _loggingOut = false;
-
-  void launchURL(String url) async {
-    if (await canLaunch(url))
-      launch(url);
-    else
-      print('Invalid URL: $url');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -418,7 +411,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  launchURL('https://linktr.ee/princesanjivy');
+                                  launch('https://linktr.ee/princesanjivy');
                                 },
                                 child: MyText(
                                   'Princesanjivy',
@@ -435,8 +428,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  launchURL(
-                                      'https://vigneshhendrix.github.io/#/');
+                                  launch('https://vigneshhendrix.github.io/#/');
                                 },
                                 child: MyText(
                                   'Vignesh Hendrix',

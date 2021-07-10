@@ -35,7 +35,7 @@ class _AddEditServiceState extends State<AddEditService> {
                   return servicesSnapshot.data.size == 0
                       ? Center(
                           child: MyText(
-                            "No data found!",
+                            "No services added",
                             color: WHITE,
                             fontWeight: "Light",
                           ),

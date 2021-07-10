@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/helpers/format_date.dart';
+import 'package:repostaffs/helpers/generate_excel.dart';
 import 'package:repostaffs/screens/status_report.dart';
-import 'package:repostaffs/components/fullscreen_view.dart';
 
 class StaffStatusAdmin extends StatefulWidget {
   @override
@@ -26,7 +27,10 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
               .snapshots(),
           builder: (context, userSnapshot) {
             if (!userSnapshot.hasData)
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                  child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+              ));
 
             return ListView.builder(
               itemCount: userSnapshot.data.size,
@@ -78,8 +82,6 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                     ),
                   ),
                   onTap: () {
-                    /// todo
-                    print(dateToString(pickedDate));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -98,38 +100,89 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
               },
             );
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await showDatePicker(
-            context: context,
-            initialDate: pickedDate,
-            firstDate: DateTime(1900),
-            lastDate: DateTime(2030),
-            confirmText: "SET",
-            builder: (BuildContext context, Widget child) {
-              return Theme(
-                data: ThemeData.dark().copyWith(
-                  colorScheme: ColorScheme.dark(
-                    primary: PRIMARY,
-                    onPrimary: WHITE,
-                    surface: PRIMARY,
-                    // onSurface: PRIMARY,
-                  ),
-                  // dialogBackgroundColor: WHITE,
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "download",
+            onPressed: () async {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => SimpleDialog(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: child,
               );
-            },
-          ).then((value) {
-            if (value != null)
-              setState(() {
-                pickedDate = value;
+              await FirebaseFirestore.instance
+                  .collection("users")
+                  .get()
+                  .then((value) async {
+                Map temp = {};
+                for (int i = 0; i < value.size; i++) {
+                  temp.addAll({value.docs[i].id: value.docs[i].get("name")});
+                }
+                await FirebaseFirestore.instance
+                    .collection("status")
+                    // .where("date", isEqualTo: dateToString(pickedDate))
+                    .get()
+                    .then((value) {
+                  GenerateExcel(pickedDate).save(value.docs, temp, context);
+                });
               });
-          });
-        },
-        child: Icon(
-          Icons.lock_clock,
-        ),
+            },
+            child: Icon(
+              Icons.download_rounded,
+            ),
+          ),
+          SizedBox(
+            width: 16,
+          ),
+          FloatingActionButton(
+            heroTag: "date",
+            onPressed: () async {
+              await showDatePicker(
+                context: context,
+                initialDate: pickedDate,
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2030),
+                confirmText: "SET",
+                builder: (BuildContext context, Widget child) {
+                  return Theme(
+                    data: ThemeData.dark().copyWith(
+                      colorScheme: ColorScheme.dark(
+                        primary: PRIMARY,
+                        onPrimary: WHITE,
+                        surface: PRIMARY,
+                        // onSurface: PRIMARY,
+                      ),
+                      // dialogBackgroundColor: WHITE,
+                    ),
+                    child: child,
+                  );
+                },
+              ).then((value) {
+                if (value != null)
+                  setState(() {
+                    pickedDate = value;
+                  });
+              });
+            },
+            child: Icon(
+              Icons.lock_clock,
+            ),
+          ),
+        ],
       ),
     );
   }

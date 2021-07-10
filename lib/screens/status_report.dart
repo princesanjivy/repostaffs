@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/components/row_text.dart';
 import 'package:repostaffs/constants.dart';
-import 'package:repostaffs/components/fullscreen_view.dart';
 
 class StatusReport extends StatefulWidget {
   final String appBarTitle, profilePic, date, uid;
@@ -36,12 +36,15 @@ class _StatusReportState extends State<StatusReport> {
             .snapshots(),
         builder: (context, statusSnapshot) {
           if (!statusSnapshot.hasData)
-            return Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+            ));
 
           return statusSnapshot.data.size == 0
               ? Center(
                   child: MyText(
-                    "No data found",
+                    "No services done",
                     color: WHITE,
                   ),
                 )
@@ -79,7 +82,11 @@ class _StatusReportState extends State<StatusReport> {
                         MyRowText(
                           heading: "Customer Name :",
                           text: statusSnapshot.data.docs[pageIndex]
-                              .get("customerName"),
+                                      .get("customerName") ==
+                                  ""
+                              ? "Not given"
+                              : statusSnapshot.data.docs[pageIndex]
+                                  .get("customerName"),
                         ),
                         SizedBox(
                           height: 16,
@@ -87,7 +94,11 @@ class _StatusReportState extends State<StatusReport> {
                         MyRowText(
                           heading: "Customer Ph.No :",
                           text: statusSnapshot.data.docs[pageIndex]
-                              .get("customerPhoneNo"),
+                                      .get("customerPhoneNo") ==
+                                  ""
+                              ? "Not given"
+                              : statusSnapshot.data.docs[pageIndex]
+                                  .get("customerPhoneNo"),
                         ),
                         SizedBox(
                           height: 16,
@@ -115,7 +126,10 @@ class _StatusReportState extends State<StatusReport> {
                                 builder: (context, image) {
                                   if (!image.hasData)
                                     return Center(
-                                        child: CircularProgressIndicator());
+                                        child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.black),
+                                    ));
 
                                   return Card(
                                     shape: RoundedRectangleBorder(
@@ -174,7 +188,10 @@ class _StatusReportState extends State<StatusReport> {
                                 builder: (context, image) {
                                   if (!image.hasData)
                                     return Center(
-                                        child: CircularProgressIndicator());
+                                        child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.black),
+                                    ));
 
                                   return InkWell(
                                     onTap: () {
