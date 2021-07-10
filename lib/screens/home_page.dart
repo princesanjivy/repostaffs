@@ -13,6 +13,7 @@ import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
 import 'package:repostaffs/screens/upload_status.dart';
 import 'package:repostaffs/components/fullscreen_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,6 +22,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _loggingOut = false;
+
+  void launchURL(String url) async {
+    if (await canLaunch(url))
+      launch(url);
+    else
+      print('Invalid URL: $url');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                               enableInfiniteScroll: true,
                             ),
                           ),
-                          SizedBox(height: 100),
+                          SizedBox(height: 80),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -393,6 +401,52 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 40.0,
+                          ),
+                          MyText(
+                            'Designed & Developed by',
+                            color: WHITE,
+                            fontWeight: 'Medium',
+                            size: 10,
+                          ),
+                          SizedBox(
+                            height: 2.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  launchURL('https://linktr.ee/princesanjivy');
+                                },
+                                child: MyText(
+                                  'Princesanjivy',
+                                  color: WHITE,
+                                  size: 12,
+                                  fontWeight: 'SemiBold',
+                                ),
+                              ),
+                              MyText(
+                                ' and ',
+                                color: WHITE,
+                                size: 12,
+                                fontWeight: 'SemiBold',
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  launchURL(
+                                      'https://vigneshhendrix.github.io/#/');
+                                },
+                                child: MyText(
+                                  'Vignesh Hendrix',
+                                  color: WHITE,
+                                  size: 12,
+                                  fontWeight: 'SemiBold',
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),

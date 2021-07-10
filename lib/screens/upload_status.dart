@@ -78,7 +78,9 @@ class _UploadStatusState extends State<UploadStatus> {
   Future<bool> getImage(ImageSource source) async {
     bool isDone;
     final _picker = ImagePicker();
-    await _picker.getImage(source: source).then((image) async {
+    await _picker
+        .getImage(source: source, imageQuality: 65)
+        .then((image) async {
       if (image != null) {
         this.setState(() {
           _selectedFile = File(image.path);
