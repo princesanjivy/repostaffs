@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -311,6 +313,138 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 32,
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (b) => SimpleDialog(
+                                children: [
+                                  Center(
+                                    child: MyText(
+                                      "Do you really want to do this?",
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          Navigator.pop(b);
+
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (c) => SimpleDialog(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.all(16),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      MyText(
+                                                        "Deleting database...",
+                                                        size: 16,
+                                                      ),
+                                                      Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  Colors.black),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+
+                                          await FirebaseFirestore.instance
+                                              .collection("gallery")
+                                              .get()
+                                              .then((value) async {
+                                            for (int i = 0;
+                                                i < value.size;
+                                                i++) {
+                                              await FirebaseStorage.instance
+                                                  .refFromURL(
+                                                      value.docs[i].get("url"))
+                                                  .delete();
+
+                                              await FirebaseFirestore.instance
+                                                  .collection("gallery")
+                                                  .doc(value.docs[i].id)
+                                                  .delete();
+                                            }
+                                          });
+
+                                          await FirebaseFirestore.instance
+                                              .collection("attendance")
+                                              .get()
+                                              .then((value) async {
+                                            for (int i = 0;
+                                                i < value.size;
+                                                i++) {
+                                              await FirebaseFirestore.instance
+                                                  .collection("attendance")
+                                                  .doc(value.docs[i].id)
+                                                  .delete();
+                                            }
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.black,
+                                          ),
+                                        ),
+                                        child: MyText("YES"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: MyText(
+                                          "NO",
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          style: ButtonStyle(
+                            // elevation: MaterialStateProperty.all<double>(15),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(19),
+                              ),
+                            ),
+                            minimumSize:
+                                MaterialStateProperty.all<Size>(Size(120, 55)),
+                            backgroundColor:
+                                MaterialStateProperty.all((PRIMARY)),
+                          ),
+                          child: MyText(
+                            'Delete database',
+                            color: WHITE,
+                            fontWeight: 'Light',
+                            size: 18,
+                          ),
                         ),
                       ),
                     ],

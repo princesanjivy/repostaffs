@@ -74,59 +74,58 @@ class _GalleryState extends State<Gallery> {
                         onDoubleTap: () {
                           if (firebaseUser.email == "getme.jj16@gmail.com")
                             showDialog(
-                                context: context,
-                                builder: (context) => SimpleDialog(
-                                      children: [
-                                        Center(
-                                          child: MyText(
-                                            "Do you really want to delete this?",
+                              context: context,
+                              builder: (context) => SimpleDialog(
+                                children: [
+                                  Center(
+                                    child: MyText(
+                                      "Do you really want to delete this?",
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+
+                                          var deleteImageUrl = gallerySnapshot
+                                              .data.docs[index]
+                                              .get('url');
+
+                                          // print(deleteImageUrl);
+                                          await FirebaseStorage.instance
+                                              .refFromURL(deleteImageUrl)
+                                              .delete();
+
+                                          await FirebaseFirestore.instance
+                                              .collection("gallery")
+                                              .doc(gallerySnapshot
+                                                  .data.docs[index].id)
+                                              .delete();
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.black,
                                           ),
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed: () async {
-                                                var deleteImageUrl =
-                                                    gallerySnapshot
-                                                        .data.docs[index]
-                                                        .get('url');
-
-                                                // print(deleteImageUrl);
-                                                await FirebaseStorage.instance
-                                                    .refFromURL(deleteImageUrl)
-                                                    .delete();
-
-                                                await FirebaseFirestore.instance
-                                                    .collection("gallery")
-                                                    .doc(gallerySnapshot
-                                                        .data.docs[index].id)
-                                                    .delete();
-
-                                                Navigator.pop(context);
-                                              },
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                  Colors.black,
-                                                ),
-                                              ),
-                                              child: MyText("YES"),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: MyText(
-                                                "NO",
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
+                                        child: MyText("YES"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: MyText(
+                                          "NO",
+                                          color: Colors.black,
                                         ),
-                                      ],
-                                    ));
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),

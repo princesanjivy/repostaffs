@@ -110,11 +110,20 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.black),
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          MyText(
+                            "Generating excel...",
+                            size: 16,
+                          ),
+                          Center(
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.black),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
