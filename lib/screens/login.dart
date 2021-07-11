@@ -17,7 +17,9 @@ class _LoginState extends State<Login> {
   String error = '';
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+
   bool _inProcess = false;
+  bool showPassword = true;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -146,11 +148,24 @@ class _LoginState extends State<Login> {
                               height: 35.0,
                             ),
                             TextFormField(
-                              obscureText: true,
+                              obscureText: showPassword,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.lock_rounded,
                                   color: WHITE,
+                                ),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      showPassword = !showPassword;
+                                    });
+                                  },
+                                  child: Icon(
+                                    showPassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 labelText: 'Password',
                                 labelStyle: GoogleFonts.poppins(

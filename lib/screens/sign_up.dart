@@ -19,6 +19,9 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _password = TextEditingController();
   TextEditingController _conpassword = TextEditingController();
 
+  bool showPassword = true;
+  bool showConfirmPassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,11 +205,24 @@ class _SignUpState extends State<SignUp> {
                         height: 35.0,
                       ),
                       TextFormField(
-                        obscureText: true,
+                        obscureText: showPassword,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.lock_rounded,
                             color: WHITE,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showPassword = !showPassword;
+                              });
+                            },
+                            child: Icon(
+                              showPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
                           ),
                           labelText: 'Password',
                           labelStyle: GoogleFonts.poppins(
@@ -255,11 +271,24 @@ class _SignUpState extends State<SignUp> {
                         height: 35.0,
                       ),
                       TextFormField(
-                        obscureText: true,
+                        obscureText: showConfirmPassword,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.lock_rounded,
                             color: WHITE,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showConfirmPassword = !showConfirmPassword;
+                              });
+                            },
+                            child: Icon(
+                              showConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
                           ),
                           labelText: 'Confirm Password',
                           labelStyle: GoogleFonts.poppins(
