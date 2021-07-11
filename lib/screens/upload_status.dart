@@ -111,33 +111,6 @@ class _UploadStatusState extends State<UploadStatus> {
     final firebaseUser = context.watch<User>();
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            // if (count <= 4) count++;
-            // items.add(
-            //   MyDropDown(
-            //     services: services,
-            //   ),
-            // );
-            // items.add(Text(
-            //     "Heyyy" + DateTime.now().microsecondsSinceEpoch.toString()));
-            items.add(
-              MyDropDown(
-                services: services,
-                stateIndexx: stateIndex,
-              ),
-            );
-            stateIndex++;
-          });
-        },
-        child: Icon(
-          Icons.add,
-          color: WHITE,
-        ),
-        backgroundColor: PRIMARY,
-        splashColor: WHITE,
-      ),
       appBar: MyAppBar('Service Status'),
       body: _inProcess
           ? Center(
