@@ -14,6 +14,14 @@ class MyDropDown extends StatelessWidget {
   bool notextField = false;
   bool showHint = false;
 
+  List listOfServices = [
+    "Men",
+    "Women",
+    "Color & Treatment",
+    "Facials",
+    "Body",
+  ];
+
   TextEditingController _priceCon = TextEditingController();
 
   @override
@@ -82,14 +90,7 @@ class MyDropDown extends StatelessWidget {
                   Icons.arrow_drop_down_circle_sharp,
                 ),
                 isExpanded: true,
-                // hint: MyText(
-                //   'Select Service',
-                //   fontWeight: 'MEDIUM',
-                //   size: 18,
-                //   color: WHITE,
-                // ),
-                value: 'Select Service',
-
+                value: "Men",
                 onChanged: (service) {
                   // print(ind);
                   if (service != 'Select Service') {
@@ -113,19 +114,27 @@ class MyDropDown extends StatelessWidget {
                 ),
                 iconEnabledColor: WHITE,
                 focusColor: WHITE,
-                items: services
-                        .map(
-                          (service) => DropdownMenuItem(
-                            value: service['name'],
-                            child: MyText(
-                              service['name'],
-                              color: WHITE,
-                              fontWeight: 'MEDIUM',
-                            ),
-                          ),
-                        )
-                        .toList() ??
-                    [],
+                items: listOfServices
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: MyText(e),
+                      ),
+                    )
+                    .toList(),
+                // items: services
+                //         .map(
+                //           (service) => DropdownMenuItem(
+                //             value: service['name'],
+                //             child: MyText(
+                //               service['name'],
+                //               color: WHITE,
+                //               fontWeight: 'MEDIUM',
+                //             ),
+                //           ),
+                //         )
+                //         .toList() ??
+                //     [],
               );
       }),
     );
