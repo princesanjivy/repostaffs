@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:repostaffs/screens/add_edit_service.dart';
 import 'package:repostaffs/screens/attendance_admin.dart';
 import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_status_admin.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePageAdmin extends StatefulWidget {
   @override
@@ -34,7 +36,9 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                    ),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -47,260 +51,319 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                   ],
                 ),
               )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+            : Stack(
+                alignment: Alignment.bottomCenter,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  ListView(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: PRIMARY,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AttendancePreview(),
-                                ),
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(15),
-                            splashColor: WHITE,
-                            radius: 300,
-                            child: Container(
-                              height: 140,
-                              width: 140,
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                  20.0,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.person_add_alt_1_rounded,
-                                      size: 25.0,
+                      SizedBox(height: 32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: PRIMARY,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AttendancePreview(),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10.0),
-                                      child: MyText(
-                                        'Attendance',
-                                        color: WHITE,
-                                        fontWeight: 'Medium',
-                                        size: 15,
-                                      ),
-                                    )
-                                  ],
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(15),
+                                splashColor: WHITE,
+                                radius: 300,
+                                child: Container(
+                                  height: 140,
+                                  width: 140,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                      20.0,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.person_add_alt_1_rounded,
+                                          size: 25.0,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 10.0),
+                                          child: MyText(
+                                            'Attendance',
+                                            color: WHITE,
+                                            fontWeight: 'Medium',
+                                            size: 15,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 30.0,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: PRIMARY,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(15),
-                            onTap: () {
-                              // changeScreen(context, StaffStatusAdmin());
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StaffStatusAdmin(),
-                                ),
-                              );
-                            },
-                            splashColor: WHITE,
-                            radius: 300,
-                            child: Container(
-                              height: 140,
-                              width: 140,
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                  20.0,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle,
-                                      size: 30.0,
+                          SizedBox(
+                            width: 30.0,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: PRIMARY,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(15),
+                                onTap: () {
+                                  // changeScreen(context, StaffStatusAdmin());
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StaffStatusAdmin(),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
+                                  );
+                                },
+                                splashColor: WHITE,
+                                radius: 300,
+                                child: Container(
+                                  height: 140,
+                                  width: 140,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                      20.0,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.check_circle,
+                                          size: 30.0,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 10.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  MyText(
+                                                    'Service',
+                                                    color: WHITE,
+                                                    fontWeight: 'Medium',
+                                                    size: 15,
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  MyText(
+                                                    'Status',
+                                                    color: WHITE,
+                                                    fontWeight: 'Medium',
+                                                    size: 15,
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: PRIMARY,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(15),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Gallery(),
+                                      ),
+                                    );
+                                  },
+                                  //Add Navigator to the Gallery Page
+                                  splashColor: WHITE,
+                                  radius: 300,
+                                  child: Container(
+                                    height: 140,
+                                    width: 140,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(
+                                        20.0,
+                                      ),
                                       child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              MyText(
-                                                'Service',
-                                                color: WHITE,
-                                                fontWeight: 'Medium',
-                                                size: 15,
-                                              )
-                                            ],
+                                          Icon(
+                                            Icons.photo_library_rounded,
+                                            color: WHITE,
+                                            size: 25.0,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              MyText(
-                                                'Status',
-                                                color: WHITE,
-                                                fontWeight: 'Medium',
-                                                size: 15,
-                                              )
-                                            ],
-                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10.0),
+                                            child: MyText(
+                                              'Gallery',
+                                              color: WHITE,
+                                              fontWeight: 'Medium',
+                                              size: 15,
+                                            ),
+                                          )
                                         ],
                                       ),
-                                    )
-                                  ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                            SizedBox(
+                              width: 30.0,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: PRIMARY,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(15),
+                                  onTap: () async {
+                                    setState(() {
+                                      _loggingOut = true;
+                                    });
+                                    await Future.delayed(
+                                        Duration(seconds: 2), null);
+
+                                    Fluttertoast.showToast(
+                                      msg: 'Signed out Successfully',
+                                      backgroundColor: WHITE,
+                                      textColor: PRIMARY,
+                                    );
+                                    context
+                                        .read<AuthenticationProvider>()
+                                        .signOut();
+                                  },
+                                  splashColor: WHITE,
+                                  radius: 300,
+                                  child: Container(
+                                    height: 140,
+                                    width: 140,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(
+                                        20.0,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.logout,
+                                            color: WHITE,
+                                            size: 25.0,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10.0),
+                                            child: MyText(
+                                              'Logout',
+                                              color: WHITE,
+                                              fontWeight: 'Medium',
+                                              size: 15,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: PRIMARY,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(15),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Gallery(),
-                                  ),
-                                );
-                              },
-                              //Add Navigator to the Gallery Page
-                              splashColor: WHITE,
-                              radius: 300,
-                              child: Container(
-                                height: 140,
-                                width: 140,
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                    20.0,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.photo_library_rounded,
-                                        color: WHITE,
-                                        size: 25.0,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 10.0),
-                                        child: MyText(
-                                          'Gallery',
-                                          color: WHITE,
-                                          fontWeight: 'Medium',
-                                          size: 15,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      MyText(
+                        'Designed & Developed by',
+                        color: WHITE,
+                        fontWeight: 'Medium',
+                        size: 10,
+                      ),
+                      SizedBox(
+                        height: 2.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              launch('https://linktr.ee/princesanjivy');
+                            },
+                            child: MyText(
+                              'princesanjivy',
+                              color: WHITE,
+                              size: 12,
+                              fontWeight: 'SemiBold',
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 30.0,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: PRIMARY,
-                            borderRadius: BorderRadius.circular(15),
+                          MyText(
+                            ' & ',
+                            color: WHITE,
+                            size: 12,
+                            fontWeight: 'SemiBold',
                           ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(15),
-                              onTap: () async {
-                                setState(() {
-                                  _loggingOut = true;
-                                });
-                                await Future.delayed(
-                                    Duration(seconds: 2), null);
-
-                                Fluttertoast.showToast(
-                                  msg: 'Signed out Successfully',
-                                  backgroundColor: WHITE,
-                                  textColor: PRIMARY,
-                                );
-                                context
-                                    .read<AuthenticationProvider>()
-                                    .signOut();
-                              },
-                              splashColor: WHITE,
-                              radius: 300,
-                              child: Container(
-                                height: 140,
-                                width: 140,
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                    20.0,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.logout,
-                                        color: WHITE,
-                                        size: 25.0,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 10.0),
-                                        child: MyText(
-                                          'Logout',
-                                          color: WHITE,
-                                          fontWeight: 'Medium',
-                                          size: 15,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                          InkWell(
+                            onTap: () {
+                              launch('https://vigneshhendrix.github.io/#/');
+                            },
+                            child: MyText(
+                              'Vignesh Hendrix',
+                              color: WHITE,
+                              size: 12,
+                              fontWeight: 'SemiBold',
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                    ],
                   ),
                 ],
               ),

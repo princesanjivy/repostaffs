@@ -73,7 +73,9 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                  ),
                   SizedBox(
                     height: 10.0,
                   ),

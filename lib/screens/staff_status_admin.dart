@@ -55,10 +55,6 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                                   title:
                                       userSnapshot.data.docs[index].get("name"),
                                 ),
-
-                                // title: gallerySnapshot.data.docs[index]
-                                // .get("customerName")
-                                // .toString(),
                               ),
                             );
                           },

@@ -30,7 +30,11 @@ class _AddEditServiceState extends State<AddEditService> {
                     .snapshots(),
                 builder: (context, servicesSnapshot) {
                   if (!servicesSnapshot.hasData)
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                      ),
+                    );
 
                   return servicesSnapshot.data.size == 0
                       ? Center(

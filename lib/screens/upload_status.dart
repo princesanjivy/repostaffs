@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/helpers/format_date.dart';
 import 'package:repostaffs/helpers/upload_file.dart';
-import 'package:repostaffs/screens/home_page.dart';
 
 class UploadStatus extends StatefulWidget {
   @override
@@ -79,7 +79,10 @@ class _UploadStatusState extends State<UploadStatus> {
     bool isDone;
     final _picker = ImagePicker();
     await _picker
-        .getImage(source: source, imageQuality: 65)
+        .getImage(
+      source: source,
+      imageQuality: 45,
+    )
         .then((image) async {
       if (image != null) {
         this.setState(() {
@@ -132,7 +135,10 @@ class _UploadStatusState extends State<UploadStatus> {
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircularProgressIndicator(),
+                        CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black),
+                        ),
                         SizedBox(
                           height: 10.0,
                         ),
@@ -150,7 +156,10 @@ class _UploadStatusState extends State<UploadStatus> {
                         )
                       ],
                     )
-                  : CircularProgressIndicator())
+                  : CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                    ),
+            )
           : SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Padding(
@@ -413,7 +422,7 @@ class _UploadStatusState extends State<UploadStatus> {
                         ),
                       ),
                     SizedBox(
-                      height: 30,
+                      height: 32,
                     ),
                     Center(
                       child: ElevatedButton(
@@ -449,25 +458,23 @@ class _UploadStatusState extends State<UploadStatus> {
                               'customerName': _customerName.text,
                               'customerPhoneNo': _mobNo.text,
                               'services': selectedServices,
-                              'customerPhotos': customerNetImages,
+                              // 'customerPhotos': customerNetImages,
                               'date': dateToString(DateTime.now()),
                             }).then((value) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                ),
-                              );
+                              selectedServices.clear();
+
+                              Navigator.pop(context);
+
                               Fluttertoast.showToast(
                                 msg:
-                                    'Your Status has been successfully Updated',
+                                    'Your status has been successfully updated',
                                 textColor: PRIMARY,
                                 backgroundColor: WHITE,
                               );
                             });
                           } else {
                             Fluttertoast.showToast(
-                              msg: 'Enter all the details',
+                              msg: 'Please select one service',
                               textColor: PRIMARY,
                               backgroundColor: WHITE,
                             );

@@ -37,7 +37,11 @@ class _HomePageState extends State<HomePage> {
           stream: FirebaseFirestore.instance.collection("gallery").snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData)
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                ),
+              );
 
             int temp = 0;
 
@@ -65,7 +69,10 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircularProgressIndicator(),
+                          CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black),
+                          ),
                           SizedBox(
                             height: 10.0,
                           ),
@@ -78,208 +85,68 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     )
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 30,
-                          ),
-                          imageList.length == 0
-                              ? Center(
-                                  child: Text("No photos available"),
-                                )
-                              : CarouselSlider.builder(
-                                  itemCount: imageList.length,
-                                  itemBuilder: (context, index, image) {
-                                    return InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                FullScreenView(
-                                              child: Image.network(
-                                                imageList[index]['imageLink'],
-                                                fit: BoxFit.cover,
-                                              ),
-                                              title: imageList[index]
-                                                  ['customerName'],
+                  : Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        ListView(
+                          children: [
+                            SizedBox(height: 32),
+                            imageList.length == 0
+                                ? Container()
+                                : CarouselSlider.builder(
+                                    itemCount: imageList.length,
+                                    itemBuilder: (context, index, image) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FullScreenView(
+                                                child: Image.network(
+                                                  imageList[index]['imageLink'],
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: imageList[index]
+                                                    ['customerName'],
 
-                                              // title: gallerySnapshot.data.docs[index]
-                                              // .get("customerName")
-                                              // .toString(),
+                                                // title: gallerySnapshot.data.docs[index]
+                                                // .get("customerName")
+                                                // .toString(),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 300,
+                                          height: 200,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: WHITE,
+                                              width: 3,
+                                            ),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                  imageList[index]
+                                                      ['imageLink']),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              15,
                                             ),
                                           ),
-                                        );
-                                      },
-                                      child: Container(
-                                        width: 300,
-                                        height: 200,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: WHITE,
-                                            width: 3,
-                                          ),
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                                imageList[index]['imageLink']),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  options: CarouselOptions(
-                                    autoPlay: true,
-                                    autoPlayCurve: Curves.fastOutSlowIn,
-                                    enlargeCenterPage: true,
-                                    enableInfiniteScroll: true,
-                                  ),
-                                ),
-                          SizedBox(height: 80),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: PRIMARY,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              StaffAttendance(),
                                         ),
                                       );
                                     },
-                                    borderRadius: BorderRadius.circular(15),
-                                    splashColor: WHITE,
-                                    radius: 300,
-                                    child: Container(
-                                      height: 140,
-                                      width: 140,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(
-                                          20.0,
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.person_add_alt_1_rounded,
-                                              size: 25.0,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 10.0),
-                                              child: MyText(
-                                                'Attendance',
-                                                color: WHITE,
-                                                fontWeight: 'Medium',
-                                                size: 15,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                    options: CarouselOptions(
+                                      autoPlay: true,
+                                      autoPlayCurve: Curves.fastOutSlowIn,
+                                      enlargeCenterPage: true,
+                                      enableInfiniteScroll: true,
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 30.0,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: PRIMARY,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(15),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UploadStatus()),
-                                      );
-                                    }, //add navigator to the Service Status Upload Page
-                                    splashColor: WHITE,
-                                    radius: 300,
-                                    child: Container(
-                                      height: 140,
-                                      width: 140,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(
-                                          20.0,
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.check_circle,
-                                              size: 30.0,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      MyText(
-                                                        'Service',
-                                                        color: WHITE,
-                                                        fontWeight: 'Medium',
-                                                        size: 15,
-                                                      )
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      MyText(
-                                                        'Status',
-                                                        color: WHITE,
-                                                        fontWeight: 'Medium',
-                                                        size: 15,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Row(
+                            SizedBox(height: 32),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
@@ -290,15 +157,16 @@ class _HomePageState extends State<HomePage> {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      borderRadius: BorderRadius.circular(15),
                                       onTap: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => Gallery(),
+                                            builder: (context) =>
+                                                StaffAttendance(),
                                           ),
                                         );
-                                      }, //Add Navigator to the Gallery Page
+                                      },
+                                      borderRadius: BorderRadius.circular(15),
                                       splashColor: WHITE,
                                       radius: 300,
                                       child: Container(
@@ -313,15 +181,14 @@ class _HomePageState extends State<HomePage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Icon(
-                                                Icons.photo_library_rounded,
-                                                color: WHITE,
+                                                Icons.person_add_alt_1_rounded,
                                                 size: 25.0,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10.0),
+                                                padding:
+                                                    EdgeInsets.only(top: 10.0),
                                                 child: MyText(
-                                                  'Gallery',
+                                                  'Attendance',
                                                   color: WHITE,
                                                   fontWeight: 'Medium',
                                                   size: 15,
@@ -346,22 +213,15 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(15),
-                                      onTap: () async {
-                                        setState(() {
-                                          _loggingOut = true;
-                                        });
-                                        await Future.delayed(
-                                            Duration(seconds: 2), null);
-
-                                        Fluttertoast.showToast(
-                                          msg: 'Signed out Successfully',
-                                          backgroundColor: WHITE,
-                                          textColor: PRIMARY,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UploadStatus(),
+                                          ),
                                         );
-                                        context
-                                            .read<AuthenticationProvider>()
-                                            .signOut();
-                                      },
+                                      }, //add navigator to the Service Status Upload Page
                                       splashColor: WHITE,
                                       radius: 300,
                                       child: Container(
@@ -376,18 +236,41 @@ class _HomePageState extends State<HomePage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Icon(
-                                                Icons.logout,
-                                                color: WHITE,
-                                                size: 25.0,
+                                                Icons.check_circle,
+                                                size: 30.0,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10.0),
-                                                child: MyText(
-                                                  'Logout',
-                                                  color: WHITE,
-                                                  fontWeight: 'Medium',
-                                                  size: 15,
+                                                padding:
+                                                    EdgeInsets.only(top: 10.0),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        MyText(
+                                                          'Service',
+                                                          color: WHITE,
+                                                          fontWeight: 'Medium',
+                                                          size: 15,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        MyText(
+                                                          'Status',
+                                                          color: WHITE,
+                                                          fontWeight: 'Medium',
+                                                          size: 15,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
                                               )
                                             ],
@@ -399,54 +282,185 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 40.0,
-                          ),
-                          MyText(
-                            'Designed & Developed by',
-                            color: WHITE,
-                            fontWeight: 'Medium',
-                            size: 10,
-                          ),
-                          SizedBox(
-                            height: 2.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  launch('https://linktr.ee/princesanjivy');
-                                },
-                                child: MyText(
-                                  'Princesanjivy',
+                            Padding(
+                              padding: EdgeInsets.only(top: 25.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: PRIMARY,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(15),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Gallery(),
+                                            ),
+                                          );
+                                        }, //Add Navigator to the Gallery Page
+                                        splashColor: WHITE,
+                                        radius: 300,
+                                        child: Container(
+                                          height: 140,
+                                          width: 140,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                              20.0,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.photo_library_rounded,
+                                                  color: WHITE,
+                                                  size: 25.0,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: MyText(
+                                                    'Gallery',
+                                                    color: WHITE,
+                                                    fontWeight: 'Medium',
+                                                    size: 15,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 30.0,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: PRIMARY,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(15),
+                                        onTap: () async {
+                                          setState(() {
+                                            _loggingOut = true;
+                                          });
+                                          await Future.delayed(
+                                              Duration(seconds: 2), null);
+
+                                          Fluttertoast.showToast(
+                                            msg: 'Signed out Successfully',
+                                            backgroundColor: WHITE,
+                                            textColor: PRIMARY,
+                                          );
+                                          context
+                                              .read<AuthenticationProvider>()
+                                              .signOut();
+                                        },
+                                        splashColor: WHITE,
+                                        radius: 300,
+                                        child: Container(
+                                          height: 140,
+                                          width: 140,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                              20.0,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.logout,
+                                                  color: WHITE,
+                                                  size: 25.0,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: MyText(
+                                                    'Logout',
+                                                    color: WHITE,
+                                                    fontWeight: 'Medium',
+                                                    size: 15,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MyText(
+                              'Designed & Developed by',
+                              color: WHITE,
+                              fontWeight: 'Medium',
+                              size: 10,
+                            ),
+                            SizedBox(
+                              height: 2.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    launch('https://linktr.ee/princesanjivy');
+                                  },
+                                  child: MyText(
+                                    'princesanjivy',
+                                    color: WHITE,
+                                    size: 12,
+                                    fontWeight: 'SemiBold',
+                                  ),
+                                ),
+                                MyText(
+                                  ' & ',
                                   color: WHITE,
                                   size: 12,
                                   fontWeight: 'SemiBold',
                                 ),
-                              ),
-                              MyText(
-                                ' and ',
-                                color: WHITE,
-                                size: 12,
-                                fontWeight: 'SemiBold',
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  launch('https://vigneshhendrix.github.io/#/');
-                                },
-                                child: MyText(
-                                  'Vignesh Hendrix',
-                                  color: WHITE,
-                                  size: 12,
-                                  fontWeight: 'SemiBold',
+                                InkWell(
+                                  onTap: () {
+                                    launch(
+                                        'https://vigneshhendrix.github.io/#/');
+                                  },
+                                  child: MyText(
+                                    'Vignesh Hendrix',
+                                    color: WHITE,
+                                    size: 12,
+                                    fontWeight: 'SemiBold',
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
             );
           }),

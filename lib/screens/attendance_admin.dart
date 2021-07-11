@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:repostaffs/components/fullscreen_view.dart';
 import 'package:repostaffs/components/my_appbar.dart';
 import 'package:repostaffs/components/my_text.dart';
 import 'package:repostaffs/constants.dart';
@@ -25,10 +27,15 @@ class _AttendancePreviewState extends State<AttendancePreview> {
             .snapshots(),
         builder: (context, attendanceSnapshot) {
           if (!attendanceSnapshot.hasData)
-            return Center(child: CircularProgressIndicator());
-          List data;
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+              ),
+            );
+          List data, checkIn;
           if (attendanceSnapshot.data.size != 0) {
             data = attendanceSnapshot.data.docs[0].get("staffs");
+            checkIn = attendanceSnapshot.data.docs[0].get("checkIn");
           }
 
           return attendanceSnapshot.data.size == 0
@@ -49,28 +56,67 @@ class _AttendancePreviewState extends State<AttendancePreview> {
                             .snapshots(),
                         builder: (context, userSnapshot) {
                           if (!userSnapshot.hasData)
-                            return Center(child: CircularProgressIndicator());
+                            return Center(
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.black),
+                              ),
+                            );
 
                           return !userSnapshot.data.exists
                               ? Container()
                               : Padding(
                                   padding: EdgeInsets.all(16),
                                   child: Row(
-                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          userSnapshot.data.get("imageUrl"),
-                                        ),
-                                        backgroundColor: PRIMARY,
-                                      ),
-
-                                      /// todo change into separate class
-                                      SizedBox(
-                                        width: 16,
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FullScreenView(
+                                                    child: Image.network(
+                                                      userSnapshot.data
+                                                          .get("imageUrl"),
+                                                    ),
+                                                    title: userSnapshot.data
+                                                        .get("name"),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                userSnapshot.data
+                                                    .get("imageUrl"),
+                                              ),
+                                              backgroundColor: PRIMARY,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 16,
+                                          ),
+                                          MyText(
+                                            userSnapshot.data.get("name"),
+                                            size: 16,
+                                            fontWeight: "Light",
+                                            color: WHITE,
+                                          ),
+                                        ],
                                       ),
                                       MyText(
-                                        userSnapshot.data.get("name"),
+                                        DateFormat.jms()
+                                            .format(
+                                              checkIn[index][data[index]]
+                                                  .toDate(),
+                                            )
+                                            .toString(),
                                         size: 16,
                                         fontWeight: "Light",
                                         color: WHITE,

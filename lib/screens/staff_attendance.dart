@@ -56,6 +56,11 @@ class _StaffAttendanceState extends State<StaffAttendance> {
             "staffs": [
               uid,
             ],
+            "checkIn": [
+              {
+                uid: DateTime.now(),
+              },
+            ],
           },
           SetOptions(merge: true),
         );
@@ -68,6 +73,8 @@ class _StaffAttendanceState extends State<StaffAttendance> {
         return;
       } else {
         List temp = value.get("staffs");
+        List checkInTemp = value.get("checkIn");
+
         if (temp.contains(uid)) {
           setState(() {
             status = 1;
@@ -77,12 +84,17 @@ class _StaffAttendanceState extends State<StaffAttendance> {
           return;
         } else {
           temp.add(uid);
+          checkInTemp.add({
+            uid: DateTime.now(),
+          });
+
           await FirebaseFirestore.instance
               .collection("attendance")
               .doc(code)
               .set(
             {
               "staffs": temp,
+              "checkIn": checkInTemp,
             },
             SetOptions(merge: true),
           );
