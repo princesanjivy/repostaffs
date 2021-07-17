@@ -145,6 +145,36 @@ class _StaffStatusAdminState extends State<StaffStatusAdmin> {
                   GenerateExcel(pickedDate).save(value.docs, temp, context);
                 });
               });
+
+              // await FirebaseFirestore.instance
+              //     .collection("status")
+              //     .get()
+              //     .then((value) {
+              //   for (int i = 0; i < value.size; i++) {
+              //     List temp = [];
+              //     List services = value.docs[i].get("services");
+              //
+              //     for (int j = 0; j < services.length; j++) {
+              //       if (services[j].containsKey("name")) {
+              //         continue;
+              //       } else {
+              //         services[j].forEach((key, value) {
+              //           temp.add({
+              //             "name": key,
+              //             "price": value,
+              //           });
+              //         });
+              //       }
+              //     }
+              //     if (temp.isNotEmpty) {
+              //       print(temp);
+              //       FirebaseFirestore.instance
+              //           .collection("status")
+              //           .doc(value.docs[i].id)
+              //           .update({"services": temp});
+              //     }
+              //   }
+              // });
             },
             child: Icon(
               Icons.download_rounded,

@@ -507,7 +507,7 @@ class _UploadStatusState extends State<UploadStatus> {
                         List t = [];
 
                         toUploadServices
-                            .forEach((key, value) => t.add({key: value}));
+                            .forEach((key, value) => t.add({"name":key,"price": value}));
                         print(t);
 
                         setState(() {

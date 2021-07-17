@@ -401,6 +401,20 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                                                   .delete();
                                             }
                                           });
+
+                                          await FirebaseFirestore.instance
+                                              .collection("status")
+                                              .get()
+                                              .then((value) async {
+                                            for (int i = 0;
+                                                i < value.size;
+                                                i++) {
+                                              await FirebaseFirestore.instance
+                                                  .collection("status")
+                                                  .doc(value.docs[i].id)
+                                                  .delete();
+                                            }
+                                          });
                                           Navigator.pop(context);
                                         },
                                         style: ButtonStyle(
