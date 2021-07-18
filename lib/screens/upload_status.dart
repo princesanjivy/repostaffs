@@ -21,9 +21,7 @@ class UploadStatus extends StatefulWidget {
 }
 
 class _UploadStatusState extends State<UploadStatus> {
-  List services = [
-    {'name': 'Select Service'}
-  ];
+  Map<String, List> services = {};
 
   Map toUploadServices = {};
   List listOfServices = [
@@ -50,6 +48,7 @@ class _UploadStatusState extends State<UploadStatus> {
   List items = [];
 
   List addedServices = [];
+
   @override
   void initState() {
     super.initState();
@@ -61,23 +60,18 @@ class _UploadStatusState extends State<UploadStatus> {
     setState(() {
       _inProcess = true;
     });
-    await FirebaseFirestore.instance.collection("services").get().then((value) {
-      for (int i = 0; i < value.size; i++) {
-        var serviceDetails = {
-          'name': value.docs[i].get("name").toString(),
-          'price': value.docs[i].get("price").toString()
-        };
-        services.add(serviceDetails);
-      }
 
-      // items.add(Text("Hello"));
-      items.add(
-        MyDropDown(
-          services: services,
-          stateIndexx: stateIndex,
-        ),
-      );
-      stateIndex++;
+    for (int i = 0; i < listOfServices.length; i++) {
+      services.addAll({listOfServices[i]: []});
+    }
+
+    await FirebaseFirestore.instance.collection("services").get().then((value) {
+      for (int i = 0; i < value.docs.length; i++) {
+        services.update(value.docs[i].get("category"), (v) {
+          v.add(value.docs[i].data());
+          return v;
+        });
+      }
 
       setState(() {
         _inProcess = false;
@@ -257,90 +251,148 @@ class _UploadStatusState extends State<UploadStatus> {
                       childrenPadding: EdgeInsets.all(8),
                       iconColor: Colors.white,
                       children: [
-                        StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection("services")
-                              .where("category",
-                                  isEqualTo: listOfServices[index])
-                              .orderBy("name")
-                              .snapshots(),
-                          builder: (context, servicesSnapshot) {
-                            if (!servicesSnapshot.hasData)
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.black),
-                                ),
-                              );
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: services[cName].length,
+                          itemBuilder: (context, index) {
+                            String serviceName =
+                                services[cName][index]["name"] + ", " + cName;
 
-                            return servicesSnapshot.data.size == 0
-                                ? Center(
-                                    child: MyText(
-                                      "No services added",
-                                      color: Colors.white,
-                                      fontWeight: "Light",
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: servicesSnapshot.data.size,
-                                    itemBuilder: (context, index) {
-                                      String serviceName = servicesSnapshot
-                                              .data.docs[index]
-                                              .get("name") +
-                                          ", " +
-                                          cName;
+                            print("HEY $serviceName");
 
-                                      return ListTile(
-                                        onTap: () {
-                                          if (!addedServices
-                                              .contains(serviceName)) {
-                                            setState(() {
-                                              addedServices.add(serviceName);
-                                              toUploadServices.addAll(
-                                                {
-                                                  serviceName: servicesSnapshot
-                                                      .data.docs[index]
-                                                      .get("price"),
-                                                },
-                                              );
-                                            });
-                                          } else {
-                                            setState(() {
-                                              addedServices.remove(serviceName);
-                                              toUploadServices
-                                                  .remove(serviceName);
-                                            });
-                                          }
+                            return ListTile(
+                              onTap: () {
+                                if (!addedServices.contains(serviceName)) {
+                                  setState(() {
+                                    addedServices.add(serviceName);
+                                    toUploadServices.addAll(
+                                      {
+                                        serviceName: services[cName][index]
+                                            ["price"],
+                                      },
+                                    );
+                                  });
+                                } else {
+                                  setState(() {
+                                    addedServices.remove(serviceName);
+                                    toUploadServices.remove(serviceName);
+                                  });
+                                }
 
-                                          print(toUploadServices);
-                                        },
-                                        title: MyText(
-                                          servicesSnapshot.data.docs[index]
-                                              .get("name"),
-                                          color: Colors.white,
+                                print(toUploadServices);
+                              },
+                              title: MyText(
+                                services[cName][index]["name"],
+                                color: Colors.white,
+                              ),
+                              subtitle: MyText(
+                                "₹" + services[cName][index]["price"],
+                                color: Colors.white,
+                              ),
+                              trailing: addedServices.contains(serviceName)
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.check,
+                                          color: Colors.green,
                                         ),
-                                        subtitle: MyText(
-                                          "₹" +
-                                              servicesSnapshot.data.docs[index]
-                                                  .get("price"),
-                                          color: Colors.white,
-                                        ),
-                                        trailing: addedServices
-                                                .contains(serviceName)
-                                            ? Icon(
-                                                Icons.check,
-                                                color: Colors.green,
-                                              )
-                                            : Icon(
-                                                Icons.check,
-                                                color:
-                                                    Colors.red.withOpacity(0),
+                                        IconButton(
+                                          onPressed: () {
+                                            TextEditingController
+                                                _priceController =
+                                                TextEditingController();
+                                            _priceController.text =
+                                                services[cName][index]["price"];
+
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: MyText(
+                                                  "Add a new service",
+                                                  fontWeight: "SemiBold",
+                                                ),
+                                                content: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    MyText(
+                                                      services[cName][index]
+                                                          ["name"],
+                                                    ),
+                                                    TextField(
+                                                      controller:
+                                                          _priceController,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText: "Price",
+                                                        labelStyle: GoogleFonts
+                                                            .poppins(),
+                                                      ),
+                                                      style:
+                                                          GoogleFonts.poppins(),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: MyText(
+                                                      "CANCEL",
+                                                      color: PRIMARY,
+                                                      fontWeight: "Medium",
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      print(services[cName]
+                                                          [index]);
+
+                                                      services[cName][index]
+                                                          .update(
+                                                              "price",
+                                                              (value) => value =
+                                                                  _priceController
+                                                                      .text);
+                                                      print("CHANGED");
+                                                      print(services[cName]);
+
+                                                      setState(() {});
+
+                                                      Navigator.pop(context);
+                                                      _priceController.clear();
+                                                    },
+                                                    child: MyText(
+                                                      "EDIT",
+                                                      color: PRIMARY,
+                                                      fontWeight: "Medium",
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                      );
-                                    },
-                                  );
+                                            );
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Icon(
+                                      Icons.check,
+                                      color: Colors.red.withOpacity(0),
+                                    ),
+                            );
                           },
                         ),
                       ],
@@ -506,8 +558,8 @@ class _UploadStatusState extends State<UploadStatus> {
                         List<String> customerNetImages = [];
                         List t = [];
 
-                        toUploadServices
-                            .forEach((key, value) => t.add({"name":key,"price": value}));
+                        toUploadServices.forEach((key, value) =>
+                            t.add({"name": key, "price": value}));
                         print(t);
 
                         setState(() {

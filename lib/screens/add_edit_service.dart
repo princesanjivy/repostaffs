@@ -115,91 +115,92 @@ class _AddEditServiceState extends State<AddEditService> {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) =>
-                      StatefulBuilder(builder: (context, setState) {
-                    return AlertDialog(
-                      title: MyText(
-                        "Add a new service",
-                        fontWeight: "SemiBold",
-                      ),
-                      content: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          DropdownButton(
-                            hint: MyText("Select category"),
-                            isExpanded: true,
-                            value: selectedCategory,
-                            dropdownColor: Colors.white,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCategory = value;
-                              });
+                  builder: (context) => StatefulBuilder(
+                    builder: (context, setState) {
+                      return AlertDialog(
+                        title: MyText(
+                          "Add a new service",
+                          fontWeight: "SemiBold",
+                        ),
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            DropdownButton(
+                              hint: MyText("Select category"),
+                              isExpanded: true,
+                              value: selectedCategory,
+                              dropdownColor: Colors.white,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedCategory = value;
+                                });
+                              },
+                              items: services
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: MyText(e),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            TextField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                labelText: "Service Name",
+                                labelStyle: GoogleFonts.poppins(),
+                              ),
+                              style: GoogleFonts.poppins(),
+                            ),
+                            TextField(
+                              controller: _priceController,
+                              decoration: InputDecoration(
+                                labelText: "Price",
+                                labelStyle: GoogleFonts.poppins(),
+                              ),
+                              style: GoogleFonts.poppins(),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
                             },
-                            items: services
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: MyText(e),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          TextField(
-                            controller: _nameController,
-                            decoration: InputDecoration(
-                              labelText: "Service Name",
-                              labelStyle: GoogleFonts.poppins(),
+                            child: MyText(
+                              "CANCEL",
+                              color: PRIMARY,
+                              fontWeight: "Medium",
                             ),
-                            style: GoogleFonts.poppins(),
                           ),
-                          TextField(
-                            controller: _priceController,
-                            decoration: InputDecoration(
-                              labelText: "Price",
-                              labelStyle: GoogleFonts.poppins(),
+                          TextButton(
+                            onPressed: () async {
+                              await FirebaseFirestore.instance
+                                  .collection("services")
+                                  .add(
+                                {
+                                  "name": _nameController.text,
+                                  "price": _priceController.text,
+                                  "category": selectedCategory.toString(),
+                                },
+                              );
+
+                              Navigator.pop(context);
+                              _nameController.clear();
+                              _priceController.clear();
+                            },
+                            child: MyText(
+                              "ADD",
+                              color: PRIMARY,
+                              fontWeight: "Medium",
                             ),
-                            style: GoogleFonts.poppins(),
-                            keyboardType: TextInputType.number,
                           ),
                         ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: MyText(
-                            "CANCEL",
-                            color: PRIMARY,
-                            fontWeight: "Medium",
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            await FirebaseFirestore.instance
-                                .collection("services")
-                                .add(
-                              {
-                                "name": _nameController.text,
-                                "price": _priceController.text,
-                                "category": selectedCategory.toString(),
-                              },
-                            );
-
-                            Navigator.pop(context);
-                            _nameController.clear();
-                            _priceController.clear();
-                          },
-                          child: MyText(
-                            "ADD",
-                            color: PRIMARY,
-                            fontWeight: "Medium",
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
+                      );
+                    },
+                  ),
                 );
               },
               style: ButtonStyle(
