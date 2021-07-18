@@ -354,19 +354,27 @@ class _UploadStatusState extends State<UploadStatus> {
                                                   ),
                                                   TextButton(
                                                     onPressed: () async {
-                                                      print(services[cName]
-                                                          [index]);
-
                                                       services[cName][index]
                                                           .update(
                                                               "price",
-                                                              (value) => value =
+                                                               (value) => value =
                                                                   _priceController
                                                                       .text);
-                                                      print("CHANGED");
-                                                      print(services[cName]);
 
                                                       setState(() {});
+
+                                                      setState(() {
+                                                        toUploadServices.remove(
+                                                            serviceName);
+                                                        toUploadServices.addAll(
+                                                          {
+                                                            serviceName:
+                                                                services[cName]
+                                                                        [index]
+                                                                    ["price"],
+                                                          },
+                                                        );
+                                                      });
 
                                                       Navigator.pop(context);
                                                       _priceController.clear();
