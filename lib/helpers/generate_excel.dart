@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:repostaffs/helpers/format_date.dart';
 
@@ -46,7 +47,6 @@ class GenerateExcel {
       );
 
       for (int i = 0; i < data[name].length; i++) {
-        row += 1;
         List t = data[name][i]["services"];
 
         for (int j = 0; j < t.length; j++) {
@@ -54,13 +54,20 @@ class GenerateExcel {
             name,
             [
               t[j]["name"],
-              data[name][i]["date"],
+              DateFormat.yMd()
+                  .format(
+                    DateFormat("yMMMMEEEEd").parse(
+                      data[name][i]["date"],
+                    ),
+                  )
+                  .toString(),
               data[name][i]["customerName"],
               data[name][i]["customerPhoneNo"],
               int.parse(t[j]["price"]),
             ],
             row,
           );
+          row += 1;
         }
       }
     }
