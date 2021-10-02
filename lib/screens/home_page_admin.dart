@@ -12,6 +12,7 @@ import 'package:repostaffs/screens/add_edit_service.dart';
 import 'package:repostaffs/screens/attendance_admin.dart';
 import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_status_admin.dart';
+import 'package:repostaffs/screens/upload_sales.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePageAdmin extends StatefulWidget {
@@ -317,6 +318,39 @@ class _HomePageAdminState extends State<HomePageAdmin> {
                       ),
                       SizedBox(
                         height: 32,
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UploadSales(),
+                              ),
+                            );
+                          },
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(19),
+                              ),
+                            ),
+                            minimumSize:
+                                MaterialStateProperty.all<Size>(Size(120, 55)),
+                            backgroundColor:
+                                MaterialStateProperty.all((PRIMARY)),
+                          ),
+                          child: MyText(
+                            'Enter Sales',
+                            color: WHITE,
+                            fontWeight: 'Light',
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
                       ),
                       Center(
                         child: ElevatedButton(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ import 'package:repostaffs/constants.dart';
 import 'package:repostaffs/providers/auth.dart';
 import 'package:repostaffs/screens/gallery.dart';
 import 'package:repostaffs/screens/staff_attendance.dart';
+import 'package:repostaffs/screens/upload_sales.dart';
 import 'package:repostaffs/screens/upload_status.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -462,6 +464,31 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
+              floatingActionButton: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("showSales")
+                      .where("email", isEqualTo: context.watch<User>().email)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return FloatingActionButton(
+                        onPressed: () {},
+                        child: CircularProgressIndicator(),
+                      );
+                    return snapshot.data.size == 0
+                        ? Container()
+                        : FloatingActionButton(
+                            child: Icon(Icons.add),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UploadSales(),
+                                ),
+                              );
+                            },
+                          );
+                  }),
             );
           }),
     );

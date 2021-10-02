@@ -74,6 +74,45 @@ class GenerateExcel {
 
     excel.delete("Sheet1");
 
+    List headings = ["Date", "Pos1", "Cash1", "Pos2", "Cash2", "Expenses"];
+
+    excel.insertRowIterables(
+      "Sales",
+      headings,
+      0,
+    );
+    headings.asMap().forEach((index, value) {
+      excel.updateCell(
+        "Sales",
+        CellIndex.indexByColumnRow(
+          columnIndex: index,
+          rowIndex: 0,
+        ),
+        headings[index],
+        cellStyle: CellStyle(backgroundColorHex: "#C6EFCE"),
+      );
+    });
+    await FirebaseFirestore.instance
+        .collection("sales")
+        .orderBy("date")
+        .get()
+        .then((value) {
+      value.docs.asMap().forEach((index, element) {
+        excel.insertRowIterables(
+            "Sales",
+            [
+              DateTime.fromMillisecondsSinceEpoch(element.data()["date"])
+                  .toString(),
+              element.data()["pos1"],
+              element.data()["cash1"],
+              element.data()["pos2"],
+              element.data()["cash2"],
+              element.data()["expenses"],
+            ],
+            index + 1);
+      });
+    });
+
     for (String name in data.keys) {
       for (int i = 0; i < rows.length; i++) {
         excel.updateCell(
